@@ -11,10 +11,10 @@ import { RolRepository } from '../../infrastructure/repositories/RolRepository';
 import { UbicacionRepository } from '../../infrastructure/repositories/UbicacionRepository';
 import { EmailService } from '../../infrastructure/services/EmailService';
 
-import { SearchUsuariosUseCase } from '../../modules/invitaciones/use-cases/SearchUsuariosUseCase';
-import { SendInvitacionUseCase } from '../../modules/invitaciones/use-cases/SendInvitacionUseCase';
-import { GetNoElegiblesUseCase } from '../../modules/invitaciones/use-cases/GetNoElegiblesUseCase';
-import { CountInvitacionesPendientesUseCase } from '../../modules/invitaciones/use-cases/CountInvitacionesPendientesUseCase';
+import { SearchUsuariosUseCase } from '../../modules/envio-invitaciones/use-cases/SearchUsuariosUseCase';
+import { SendInvitacionUseCase } from '../../modules/envio-invitaciones/use-cases/SendInvitacionUseCase';
+import { GetNoElegiblesUseCase } from '../../modules/envio-invitaciones/use-cases/GetNoElegiblesUseCase';
+import { CountInvitacionesPendientesUseCase } from '../../modules/envio-invitaciones/use-cases/CountInvitacionesPendientesUseCase';
 import { GetParticipantesByEventoUseCase } from '../../modules/ver-participantes/use-cases/GetParticipantesByEventoUseCase';
 import { RespondInvitacionUseCase } from '../../modules/confirmar-invitacion/use-cases/RespondInvitacionUseCase';
 import { GetInvitacionesPrivadasUseCase } from '../../modules/ver-invitaciones-privadas/use-cases/GetInvitacionesPrivadasUseCase';
@@ -27,6 +27,10 @@ import { CreateEventoUseCase } from '../../modules/eventos-crear/use-cases/Creat
 import { ListPublicEventsUseCase } from '../../modules/eventos-publicos/use-cases/ListPublicEventsUseCase';
 import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-cases/ListManagedEventsUseCase';
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
+
+import { VerifyOrganizerGlobal } from '../middlewares/verifyOrganizerGlobal';
+import { VerifyOrganizerInEvent } from '../middlewares/verifyOrganizerInEvent';
+import { Request, Response, NextFunction } from 'express';
 
 export class DependencyContainer {
   // Repositorios (Singleton)
@@ -75,6 +79,11 @@ export class DependencyContainer {
   private static listPublicEventsUseCase: ListPublicEventsUseCase;
   private static listManagedEventsUseCase: ListManagedEventsUseCase;
   private static listAttendedEventsUseCase: ListAttendedEventsUseCase;
+  
+  // Middleware
+  private static verifyOrganizerOrCoorganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+  private static verifyOrganizerOrCoorganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+  
 
   // Getters para Repositorios
   static getUsuarioRepository(): UsuarioRepository {
@@ -182,7 +191,8 @@ export class DependencyContainer {
     if (!this.getNoElegiblesUseCase) {
       this.getNoElegiblesUseCase = new GetNoElegiblesUseCase(
         this.getInvitacionUsuarioRepository(),
-        this.getEstadoInvitacionRepository()
+        this.getEstadoInvitacionRepository(),
+        this.getEventoParticipanteRepository()
       );
     }
     return this.getNoElegiblesUseCase;
@@ -319,5 +329,35 @@ export class DependencyContainer {
       );
     }
     return this.listAttendedEventsUseCase;
+  }
+
+  // Getter para el middleware de verificación de organizador/coorganizador global
+  static getVerifyOrganizerGlobal() {
+    if (!this.verifyOrganizerOrCoorganizerGlobal) {
+      const middleware = new VerifyOrganizerGlobal(
+        this.getRolRepository(),
+        this.getParticipanteRepository(),
+        this.getEventoParticipanteRepository()
+      );
+      this.verifyOrganizerOrCoorganizerGlobal = (req: Request, res: Response, next: NextFunction) => {
+        return middleware.verify(req, res, next);
+      };
+    }
+    return this.verifyOrganizerOrCoorganizerGlobal;
+  }
+
+  // Getter para el middleware de verificación de organizador/coorganizador en evento
+  static getVerifyOrganizerOrCoorganizerInEvent() {
+    if (!this.verifyOrganizerOrCoorganizerInEvent) {
+      const middleware = new VerifyOrganizerInEvent(
+        this.getRolRepository(),
+        this.getParticipanteRepository(),
+        this.getEventoParticipanteRepository()
+      );
+      this.verifyOrganizerOrCoorganizerInEvent = (req: Request, res: Response, next: NextFunction) => {
+        return middleware.verify(req, res, next);
+      };
+    }
+    return this.verifyOrganizerOrCoorganizerInEvent;
   }
 }

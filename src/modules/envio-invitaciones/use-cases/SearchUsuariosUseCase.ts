@@ -13,7 +13,7 @@ export class SearchUsuariosUseCase {
     // Usar repositorio en lugar de db directo
     const usuarios = await this.usuarioRepository.searchByQuery(
       dto.query,
-      dto.limit || LIMITE_RESULTADOS_BUSQUEDA
+      LIMITE_RESULTADOS_BUSQUEDA
     );
 
     // Mapear modelos de Sequelize a DTOs

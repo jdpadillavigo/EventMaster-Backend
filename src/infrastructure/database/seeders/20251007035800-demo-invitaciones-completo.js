@@ -65,45 +65,45 @@ module.exports = {
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[0],
-        usuario_id: 2
+        usuario_id: 7
       },
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[0],
-        usuario_id: 3
+        usuario_id: 8
       },
       // Invitaciones para evento 2 (notifIds[1])
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[1],
-        usuario_id: 2
+        usuario_id: 8
       },
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[1],
-        usuario_id: 4
+        usuario_id: 7
       },
       // Invitaciones para evento 3 (notifIds[2])
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[2],
-        usuario_id: 3
+        usuario_id: 7
       },
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[2],
-        usuario_id: 5
+        usuario_id: 8
       },
       // Invitaciones para evento 4 (notifIds[3])
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[3],
-        usuario_id: 2
+        usuario_id: 8
       },
       {
         estado_invitacion_id: estadoId,
         invitacion_id: notifIds[3],
-        usuario_id: 6
+        usuario_id: 7
       }
     ], {});
 

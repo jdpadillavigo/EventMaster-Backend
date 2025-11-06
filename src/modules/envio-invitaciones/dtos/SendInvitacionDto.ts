@@ -1,7 +1,10 @@
+export interface UsuarioInvitacion {
+  usuario_id: number;
+}
+
 export interface SendInvitacionDto {
   evento_id: number;
-  usuario_ids: number[];
-  fechaLimite?: Date;
+  usuarios: UsuarioInvitacion[]; // Array de usuarios con su tipo de invitación
 }
 
 export interface SendInvitacionResultDto {

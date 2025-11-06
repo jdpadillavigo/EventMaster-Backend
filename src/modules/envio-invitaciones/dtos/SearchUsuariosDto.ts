@@ -1,6 +1,5 @@
 export interface SearchUsuariosDto {
   query: string;
-  limit?: number;
 }
 
 export interface UsuarioSearchResultDto {

@@ -2,7 +2,7 @@ import express, {Express, Request, Response, Router} from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { InvitacionController } from "./modules/invitaciones/controllers/InvitacionController";
+import { InvitacionController } from "./modules/envio-invitaciones/controllers/InvitacionController";
 import { VerParticipantesController } from "./modules/ver-participantes/controllers/VerParticipantesController";
 import { ConfirmarInvitacionController } from "./modules/confirmar-invitacion/controllers/ConfirmarInvitacionController";
 import { VerDetalleController } from "./modules/ver-detalle/controllers/VerDetalleController";

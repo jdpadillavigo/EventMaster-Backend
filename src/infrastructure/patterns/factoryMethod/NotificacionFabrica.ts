@@ -1,4 +1,4 @@
-const db = require('../database/models');
+const db = require('../../database/models');
 
 /**
  * Fábrica Abstracta - Patrón Factory Method
@@ -17,8 +17,7 @@ export abstract class NotificacionFabrica {
    */
   public abstract MetodoFabrica(
     fechaHora: Date,
-    eventoId: number,
-    fechaLimite?: Date
+    eventoId: number
   ): Promise<any>;
 
   /**
@@ -33,15 +32,14 @@ export abstract class NotificacionFabrica {
   public static async crearNotificacion(
     fechaHora: Date,
     eventoId: number,
-    tipo: string,
-    fechaLimite?: Date
+    tipo: string
   ): Promise<any | null> {
     let notificacion: any | null = null;
 
     // Seleccionar fábrica según el tipo
     if (tipo === "INVITACION") {
       const { InvitacionFabrica } = await import('./InvitacionFabrica');
-      notificacion = await new InvitacionFabrica().MetodoFabrica(fechaHora, eventoId, fechaLimite);
+      notificacion = await new InvitacionFabrica().MetodoFabrica(fechaHora, eventoId);
     }
 
     return notificacion;

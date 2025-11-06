@@ -1,5 +1,4 @@
 import { IInvitacionUsuarioRepository } from '../../domain/interfaces/IInvitacionUsuarioRepository';
-import { TipoNoElegible } from '../../domain/value-objects/EstadoInvitacion';
 
 const db = require('../database/models');
 
@@ -17,12 +16,13 @@ export class InvitacionUsuarioRepository implements IInvitacionUsuarioRepository
     }
   }
 
-  // Nota: Arreglar para ver si está pendiente!
-  // Tarea: Validación de invitación repetida
-  async findByEventoAndUsuario(eventoId: number, usuarioId: number): Promise<any | null> {
+  async findPendienteByEventoAndUsuario(eventoId: number, estadoPendienteId: number, usuarioId: number): Promise<any | null> {
     try {
       const invitacionExistente = await db.InvitacionUsuario.findOne({
-        where: { usuario_id: usuarioId },
+        where: { 
+          usuario_id: usuarioId,
+          estado_invitacion_id: estadoPendienteId
+         },
         include: [{
           model: db.Invitacion,
           as: 'invitacion',
@@ -38,7 +38,7 @@ export class InvitacionUsuarioRepository implements IInvitacionUsuarioRepository
       
       return invitacionExistente;
     } catch (error) {
-      console.error('Error en findByEventoAndUsuario:', error);
+      console.error('Error en findPendienteByEventoAndUsuario:', error);
       throw error;
     }
   }
@@ -67,7 +67,7 @@ export class InvitacionUsuarioRepository implements IInvitacionUsuarioRepository
     }
   }
 
-  async findNoElegiblesByEvento(eventoId: number, estadoPendienteId: number): Promise<any[]> {
+  async findPendientesByEvento(eventoId: number, estadoPendienteId: number): Promise<any[]> {
     try {
       // Obtener pendientes
       const pendientes = await db.InvitacionUsuario.findAll({
@@ -100,49 +100,9 @@ export class InvitacionUsuarioRepository implements IInvitacionUsuarioRepository
           }
         ]
       });
-
-      // Obtener participantes
-      const participantes = await db.EventoParticipante.findAll({
-        where: { evento_id: eventoId },
-        include: [{
-          model: db.Participante,
-          as: "participante",
-          required: true,
-          include: [{
-            model: db.Usuario,
-            as: "usuario",
-            attributes: ["usuario_id", "correo"],
-            required: true,
-            include: [{
-              model: db.Cliente,
-              as: "cliente",
-              attributes: ["nombre", "apellido"],
-              required: true
-            }]
-          }]
-        }]
-      });
-
-      const noElegibles = [
-        ...pendientes.map((i: any) => ({
-          usuario_id: i.usuario.usuario_id,
-          correo: i.usuario.correo,
-          nombre: i.usuario.cliente?.nombre || "",
-          apellido: i.usuario.cliente?.apellido || "",
-          tipo: TipoNoElegible.PENDIENTE
-        })),
-        ...participantes.map((p: any) => ({
-          usuario_id: p.participante.usuario.usuario_id,
-          correo: p.participante.usuario.correo,
-          nombre: p.participante.usuario.cliente?.nombre || "",
-          apellido: p.participante.usuario.cliente?.apellido || "",
-          tipo: TipoNoElegible.PARTICIPANTE
-        }))
-      ];
-
-      return noElegibles;
+      return pendientes;
     } catch (error) {
-      console.error('Error en findNoElegiblesByEvento:', error);
+      console.error('Error en findPendientesByEvento:', error);
       throw error;
     }
   }

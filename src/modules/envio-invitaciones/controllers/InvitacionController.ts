@@ -1,10 +1,12 @@
 import express, { Request, Response, Router } from "express";
 import { DependencyContainer } from "../../../shared/utils/DependencyContainer";
-import { LIMITE_RESULTADOS_BUSQUEDA } from "../../../domain/value-objects/Constantes";
+
+// importacion de middlewares
+import { authMiddleware } from "../../../shared/middlewares/authMiddleware";
 
 export class InvitacionController {
   private router: Router;
-  private path: string = "/api";
+  private path: string = "/api/invitations";
 
   // Use Cases (inyectados desde el contenedor)
   private searchUsuariosUseCase = DependencyContainer.getSearchUsuariosUseCase();
@@ -12,23 +14,32 @@ export class InvitacionController {
   private getNoElegiblesUseCase = DependencyContainer.getGetNoElegiblesUseCase();
   private countInvitacionesPendientesUseCase = DependencyContainer.getCountInvitacionesPendientesUseCase();
 
+  // Middleware
+  private verifyOrganizerGlobal = DependencyContainer.getVerifyOrganizerGlobal();
+  private verifyOrganizerInEvent = DependencyContainer.getVerifyOrganizerInEvent();
+
   constructor() {
     this.router = express.Router();
+    
+    // aplicar middleware a todas las rutas
+    this.router.use(authMiddleware);
+
+    // inicializar rutas
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
     // 1. Endpoint para buscar usuarios por email
-    this.router.get("/invitations/search", this.searchUsuarios.bind(this));
+    this.router.get("/search", this.verifyOrganizerGlobal, this.searchUsuarios.bind(this));
 
     // 2. Endpoint para enviar invitación
-    this.router.post("/invitations/send", this.sendInvitacion.bind(this));
+    this.router.post("/send", this.verifyOrganizerInEvent, this.sendInvitacion.bind(this));
 
     // 3. Obtener no elegibles por evento
-    this.router.get("/invitations/no-eligible/:evento_id", this.getNoElegibles.bind(this));
+    this.router.get("/no-eligible/:evento_id", this.verifyOrganizerInEvent, this.getNoElegibles.bind(this));
 
     // 4. Contar invitaciones pendientes por evento
-    this.router.get("/invitations/count/:evento_id", this.countInvitacionesPendientes.bind(this));
+    this.router.get("/count/:evento_id", this.verifyOrganizerInEvent, this.countInvitacionesPendientes.bind(this));
   }
 
   // Handler: Buscar usuarios
@@ -38,7 +49,6 @@ export class InvitacionController {
 
       const usuarios = await this.searchUsuariosUseCase.execute({
         query: query as string,
-        limit: LIMITE_RESULTADOS_BUSQUEDA
       });
 
       res.json({
@@ -74,12 +84,11 @@ export class InvitacionController {
   // Handler: Enviar invitación
   private async sendInvitacion(req: Request, res: Response): Promise<void> {
     try {
-      const { evento_id, usuario_ids, fechaLimite } = req.body;
+      const { evento_id, usuarios } = req.body;
 
       const result = await this.sendInvitacionUseCase.execute({
         evento_id,
-        usuario_ids,
-        fechaLimite
+        usuarios,
       });
 
       res.status(201).json(result);
@@ -133,7 +142,6 @@ export class InvitacionController {
   private async countInvitacionesPendientes(req: Request, res: Response): Promise<void> {
     try {
       const { evento_id } = req.params;
-      console.log("📢 Evento actual:", evento_id);
 
       const result = await this.countInvitacionesPendientesUseCase.execute(Number(evento_id));
 

@@ -7,7 +7,7 @@ import { SendInvitacionDto, SendInvitacionResultDto } from '../dtos/SendInvitaci
 import { EstadoInvitacionEnum } from '../../../domain/value-objects/EstadoInvitacion';
 import { LIMITE_INVITACIONES_PENDIENTES } from '../../../domain/value-objects/Constantes';
 import { TipoNotificacion } from '../../../domain/value-objects/TipoNotificacion';
-import { NotificacionFabrica } from '../../../infrastructure/factories/NotificacionFabrica';
+import { NotificacionFabrica } from '../../../infrastructure/patterns/factoryMethod/NotificacionFabrica';
 
 export class SendInvitacionUseCase {
   constructor(
@@ -20,8 +20,8 @@ export class SendInvitacionUseCase {
 
   async execute(dto: SendInvitacionDto): Promise<SendInvitacionResultDto> {
     // Validar datos requeridos
-    if (!dto.evento_id || !Array.isArray(dto.usuario_ids) || dto.usuario_ids.length === 0) {
-      throw new Error('evento_id y usuario_ids son requeridos');
+    if (!dto.evento_id || !Array.isArray(dto.usuarios) || dto.usuarios.length === 0) {
+      throw new Error('evento_id y usuarios son requeridos');
     }
 
     // Verificar que el evento existe
@@ -45,41 +45,54 @@ export class SendInvitacionUseCase {
     const cupoDisponible = LIMITE_INVITACIONES_PENDIENTES - pendientesActuales;
 
     // Validación para que el grupo no exceda el cupo disponible
-    if (dto.usuario_ids.length > cupoDisponible) {
-      throw new Error(`No se pueden enviar ${dto.usuario_ids.length} invitaciones. Solo quedan ${cupoDisponible} disponibles.`);
+    if (dto.usuarios.length > cupoDisponible) {
+      throw new Error(`No se pueden enviar ${dto.usuarios.length} invitaciones. Solo quedan ${cupoDisponible} disponibles.`);
     }
 
     // Filtrar usuarios que NO tienen invitación para este evento
     const usuariosNoInvitados: number[] = [];
     const resultados: any[] = [];
 
-    for (const usuario_id of dto.usuario_ids) {
-      const usuario = await this.usuarioRepository.findById(usuario_id);
+    for (const usuarioData of dto.usuarios) {
+      const usuario = await this.usuarioRepository.findById(usuarioData.usuario_id);
       if (!usuario) {
-        resultados.push({ usuario_id, status: 'User not found' });
+        resultados.push({ 
+          usuario_id: usuarioData.usuario_id, 
+          status: 'User not found' 
+        });
         continue;
       }
 
-      // Validar si ya está en el evento (por cualquier rol)
-      const yaEnEvento = await this.eventoParticipanteRepository.isUsuarioInEvento(dto.evento_id, usuario_id);
+      // Validar si ya está en el evento como coorganizador
+      const yaEnEvento = await this.eventoParticipanteRepository.findByEventoAndUsuario(
+        dto.evento_id, 
+        usuarioData.usuario_id
+      );
 
       if (yaEnEvento) {
-        resultados.push({ usuario_id, status: 'Already in event' });
+        resultados.push({ 
+          usuario_id: usuarioData.usuario_id, 
+          status: 'Already in event as co-organizer' 
+        });
         continue;
       }
 
-      // Validar si ya tiene invitación para este evento
-      const invitacionExistente = await this.invitacionUsuarioRepository.findByEventoAndUsuario(
+      // Validar si ya tiene invitación para este evento como coorganizador
+      const invitacionExistente = await this.invitacionUsuarioRepository.findPendienteByEventoAndUsuario(
         dto.evento_id,
-        usuario_id
+        estadoPendiente.estado_id,
+        usuarioData.usuario_id
       );
 
       if (invitacionExistente) {
-        resultados.push({ usuario_id, status: 'Already invited' });
+        resultados.push({ 
+          usuario_id: usuarioData.usuario_id, 
+          status: 'Already invited' 
+        });
         continue;
       }
 
-      usuariosNoInvitados.push(usuario_id);
+      usuariosNoInvitados.push(usuarioData.usuario_id);
     }
 
     // Si no hay usuarios nuevos, no crear Notificacion ni Invitacion
@@ -94,8 +107,7 @@ export class SendInvitacionUseCase {
     const nuevaInvitacion = await NotificacionFabrica.crearNotificacion(
       new Date(),
       dto.evento_id,
-      TipoNotificacion.INVITACION,
-      dto.fechaLimite
+      TipoNotificacion.INVITACION
     );
 
     // Crear InvitacionUsuario solo para los usuarios no invitados

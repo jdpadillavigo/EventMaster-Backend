@@ -31,7 +31,7 @@ export class ConfirmPublicAttendanceUseCase {
     }
 
     // Evitar duplicados
-    const already = await this.eventoParticipanteRepository.isUsuarioInEvento(evento_id, usuario_id);
+    const already = await this.eventoParticipanteRepository.findByEventoAndUsuario(evento_id, usuario_id);
     if (already) {
       throw new Error('Already confirmed');
     }
