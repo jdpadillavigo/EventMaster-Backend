@@ -5,8 +5,8 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "npm install && (npm run db:seed || true) && ts-node src/index.ts",
-    "dev": "nodemon src/index.ts",
+    "start": "npm install && (npm run db:seed || true) && ts-node -r tsconfig-paths/register src/index.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register --project ./tsconfig.json src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
@@ -26,23 +26,24 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.1",
     "nodemailer": "^6.9.7",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7",
-    "jsonwebtoken": "^9.0.2"
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^24.7.0",
     "@types/nodemailer": "^6.4.14",
     "@types/sequelize": "^4.28.20",
-    "@types/jsonwebtoken": "^9.0.6",
     "nodemon": "^3.1.10",
     "sequelize-cli": "^6.6.3",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
   }
 }

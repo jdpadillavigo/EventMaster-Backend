@@ -81,8 +81,8 @@ export class DependencyContainer {
   private static listAttendedEventsUseCase: ListAttendedEventsUseCase;
   
   // Middleware
-  private static verifyOrganizerOrCoorganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
-  private static verifyOrganizerOrCoorganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+  private static verifyOrganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+  private static verifyOrganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   
 
   // Getters para Repositorios
@@ -333,31 +333,31 @@ export class DependencyContainer {
 
   // Getter para el middleware de verificación de organizador/coorganizador global
   static getVerifyOrganizerGlobal() {
-    if (!this.verifyOrganizerOrCoorganizerGlobal) {
+    if (!this.verifyOrganizerGlobal) {
       const middleware = new VerifyOrganizerGlobal(
         this.getRolRepository(),
         this.getParticipanteRepository(),
         this.getEventoParticipanteRepository()
       );
-      this.verifyOrganizerOrCoorganizerGlobal = (req: Request, res: Response, next: NextFunction) => {
+      this.verifyOrganizerGlobal = (req: Request, res: Response, next: NextFunction) => {
         return middleware.verify(req, res, next);
       };
     }
-    return this.verifyOrganizerOrCoorganizerGlobal;
+    return this.verifyOrganizerGlobal;
   }
 
   // Getter para el middleware de verificación de organizador/coorganizador en evento
-  static getVerifyOrganizerOrCoorganizerInEvent() {
-    if (!this.verifyOrganizerOrCoorganizerInEvent) {
+  static getVerifyOrganizerInEvent() {
+    if (!this.verifyOrganizerInEvent) {
       const middleware = new VerifyOrganizerInEvent(
         this.getRolRepository(),
         this.getParticipanteRepository(),
         this.getEventoParticipanteRepository()
       );
-      this.verifyOrganizerOrCoorganizerInEvent = (req: Request, res: Response, next: NextFunction) => {
+      this.verifyOrganizerInEvent = (req: Request, res: Response, next: NextFunction) => {
         return middleware.verify(req, res, next);
       };
     }
-    return this.verifyOrganizerOrCoorganizerInEvent;
+    return this.verifyOrganizerInEvent;
   }
 }
