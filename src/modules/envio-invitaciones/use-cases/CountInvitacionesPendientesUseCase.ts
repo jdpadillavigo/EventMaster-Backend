@@ -2,6 +2,7 @@ import { IInvitacionUsuarioRepository } from '../../../domain/interfaces/IInvita
 import { IEstadoInvitacionRepository } from '../../../domain/interfaces/IEstadoInvitacionRepository';
 import { EstadoInvitacionEnum } from '../../../domain/value-objects/EstadoInvitacion';
 import { LIMITE_INVITACIONES_PENDIENTES } from '../../../domain/value-objects/Constantes';
+import { CountInvitacionesPendientesResultDto } from '../dtos/CountInvitacionesPendientesDto';
 
 export class CountInvitacionesPendientesUseCase {
   constructor(
@@ -9,7 +10,7 @@ export class CountInvitacionesPendientesUseCase {
     private estadoInvitacionRepository: IEstadoInvitacionRepository
   ) {}
 
-  async execute(eventoId: number): Promise<{ pendientes: number; limite: number }> {
+  async execute(eventoId: number): Promise<CountInvitacionesPendientesResultDto> {
     if (!eventoId) {
       throw new Error('evento_id es requerido');
     }
