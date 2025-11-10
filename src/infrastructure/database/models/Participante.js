@@ -38,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Usuario',
         key: 'usuario_id'
       }
-      // Removido unique: true para permitir múltiples participantes por usuario
     },
     rol_id: {
       type: DataTypes.INTEGER,

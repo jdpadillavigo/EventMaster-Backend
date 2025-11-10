@@ -1,4 +1,4 @@
-import express, {Express, Request, Response, Router} from "express";
+import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -68,6 +68,9 @@ app.use(registrarseController.getPath(), registrarseController.getRouter())
 const activarCuentaController = new ActivarCuentaController();
 app.use(activarCuentaController.getPath(), activarCuentaController.getRouter())
 
+const authController = new AuthController();
+app.use(authController.getPath(), authController.getRouter());
+
 const invitacionController = new InvitacionController();
 app.use(invitacionController.getPath(), invitacionController.getRouter())
 
@@ -97,9 +100,6 @@ app.use(attendedEventsController.getPath(), attendedEventsController.getRouter()
 
 const verInvitacionesPrivadasController = new VerInvitacionesPrivadasController();
 app.use(verInvitacionesPrivadasController.getPath(), verInvitacionesPrivadasController.getRouter());
-
-const authController = new AuthController();
-app.use(authController.getPath(), authController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

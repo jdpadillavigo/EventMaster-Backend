@@ -11,7 +11,7 @@ export class SearchUsuariosUseCase {
     }
 
     // Usar repositorio en lugar de db directo
-    const usuarios = await this.usuarioRepository.searchByQuery(
+    const usuarios = await this.usuarioRepository.searchActiveByQuery(
       dto.query,
       LIMITE_RESULTADOS_BUSQUEDA
     );

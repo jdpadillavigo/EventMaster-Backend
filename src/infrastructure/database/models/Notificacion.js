@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'notificacion_id',
         as: 'invitacion'
       });
+
+      // Una notificación puede tener una notificación de acción
+      Notificacion.hasOne(models.NotificacionAccion, {
+        foreignKey: 'notificacion_id',
+        as: 'notificacionAccion'
+      });
     }
   }
   

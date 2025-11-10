@@ -31,7 +31,7 @@ export class LoginUseCase {
         usuario_id: user.usuario_id,
         correo: user.correo,
         nombre: user.cliente?.nombre ?? null,
-        apellido: user.cliente?.apellido ?? null,
+        apellido: user.cliente?.apellido ?? null
       },
     }
     return result

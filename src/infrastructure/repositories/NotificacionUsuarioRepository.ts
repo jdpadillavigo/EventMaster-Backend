@@ -33,7 +33,7 @@ export class NotificacionUsuarioRepository implements INotificacionUsuarioReposi
                 include: [
                   {
                     model: db.Evento,
-                    as: 'evento',
+                    as: 'evento'
                   }
                 ]
               }
