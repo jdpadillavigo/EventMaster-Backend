@@ -69,9 +69,6 @@ export class ParticipantesObserver implements Observer {
             destinatarios = await this.eventoParticipanteRepository.findAllWithFilters(eventoId, [RolAsistente.rol_id], emisorId);
         }
 
-        // Filtrar destinatarios   
-        destinatarios = destinatarios.filter(p => p.usuario_id !== emisorId);
-
         // Crear notificaciones para los destinatarios
         for (const destinatario of destinatarios) {
             await this.notificacionUsuarioRepository.create({
