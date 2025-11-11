@@ -1,3 +1,5 @@
+import { INotificacionAccionRepository } from 'domain/interfaces/INotificacionAccionRepository';
+import { INotificacionRepository } from 'domain/interfaces/INotificacionRepository';
 import { NotificacionFabrica } from './NotificacionFabrica';
 
 const db = require('../../database/models');
@@ -7,7 +9,12 @@ const db = require('../../database/models');
  * Crea invitaciones (notificación + invitación)
  */
 export class AccionFabrica extends NotificacionFabrica {
-  
+  constructor(
+    private notificacionAccionRepository: INotificacionAccionRepository,
+    notificacionRepository: INotificacionRepository
+  ) {
+    super(notificacionRepository);
+  }
   /**
    * Método Fábrica sobreescrito - crea una invitación completa
    * @param fechaHora - Fecha y hora de la notificación
@@ -20,13 +27,10 @@ export class AccionFabrica extends NotificacionFabrica {
     mensaje: string
   ): Promise<any> {
     // 1. Crear la notificación base
-    const notificacion = await db.Notificacion.create({
-      fechaHora: fechaHora,
-      evento_id: eventoId
-    });
+    const notificacion = await this.crearNotificacionBase(fechaHora, eventoId);
     
     // 2. Crear la notificacion-accion
-    const notificacionAccion = await db.NotificacionAccion.create({
+    const notificacionAccion = await this.notificacionAccionRepository.create({
       notificacion_id: notificacion.notificacion_id,
       mensaje: mensaje
     });

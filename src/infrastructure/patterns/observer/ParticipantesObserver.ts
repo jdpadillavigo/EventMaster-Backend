@@ -73,4 +73,3 @@ export class ParticipantesObserver implements Observer {
         );
     }
 }
-
