@@ -372,6 +372,15 @@ export class DependencyContainer {
     return this.listAttendedEventsUseCase;
   }
 
+  static getGetNotificacionesAccionUseCase(): GetNotificacionesAccionUseCase {
+    if (!this.getNotificacionesAccionUseCase) {
+      this.getNotificacionesAccionUseCase = new GetNotificacionesAccionUseCase(
+        this.getNotificacionUsuarioRepository()
+      );
+    }
+    return this.getNotificacionesAccionUseCase;
+  }
+
   // Getter para el NotificationManager
   static getNotificationManager(): NotificationManager {
     if (!this.notificationManager) {
