@@ -56,18 +56,9 @@ export class ParticipantesObserver implements Observer {
             mensaje
         );
     
-        // Seleccionar destinatarios según público
-        let destinatarios;
-
-        if (soloParaOrganizadores) {
-            // Busco el rol organizador
-            const RolOrganizador = await this.rolRepository.findByNombre(TipoRol.ORGANIZADOR);
-            destinatarios = await this.eventoParticipanteRepository.findAllWithFilters(eventoId, [RolOrganizador.rol_id], emisorId);
-        } else {
-            // Busco el rol asistente
-            const RolAsistente = await this.rolRepository.findByNombre(TipoRol.ASISTENTE);
-            destinatarios = await this.eventoParticipanteRepository.findAllWithFilters(eventoId, [RolAsistente.rol_id], emisorId);
-        }
+        const tipoRol = soloParaOrganizadores ? TipoRol.ORGANIZADOR : TipoRol.ASISTENTE;
+        const Rol = await this.rolRepository.findByNombre(tipoRol);
+        const destinatarios = await this.eventoParticipanteRepository.findAllWithFilters(eventoId, [Rol.rol_id], emisorId);
 
         // Crear notificaciones para los destinatarios
         for (const destinatario of destinatarios) {
