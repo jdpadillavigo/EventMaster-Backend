@@ -395,7 +395,8 @@ export class DependencyContainer {
     if (!this.participantesObserver) {
       this.participantesObserver = new ParticipantesObserver(
         this.getEventoParticipanteRepository(),
-        this.getNotificacionUsuarioRepository()
+        this.getNotificacionUsuarioRepository(),
+        this.getRolRepository()
       );
     }
     return this.participantesObserver;

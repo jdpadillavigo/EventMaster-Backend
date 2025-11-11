@@ -9,4 +9,5 @@ export interface IEventoParticipanteRepository {
   findByEventoAndParticipante(eventoId: number, participanteId: number): Promise<any | null>;
   create(eventoId: number, participanteId: number): Promise<any>;
   findByParticipante(participanteId: number): Promise<any[]>
+  findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]>;
 }

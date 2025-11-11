@@ -1,6 +1,7 @@
 import { IEventoParticipanteRepository } from '../../domain/interfaces/IEventoParticipanteRepository';
 
 const db = require('../database/models');
+const { Op } = require('sequelize');
 
 export class EventoParticipanteRepository implements IEventoParticipanteRepository {
   
@@ -158,6 +159,38 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
       return link;
     } catch (error) {
       console.error('Error en findByParticipante:', error);
+      throw error;
+    }
+  }
+
+  async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]> {
+    try {
+      const links = await db.EventoParticipante.findAll({
+        // si no doy rolId, no lo uses
+        where: rolIds? { evento_id: eventoId, rol_id: { [Op.in]: rolIds } } : { evento_id: eventoId },
+        include: [{
+          model: db.Participante,
+          as: "participante",
+          required: true,
+          include: [{
+            model: db.Usuario,
+            as: "usuario",
+            attributes: ["usuario_id", "correo"],
+            required: true,
+            // si se pasa usuarioExcluidoId, no lo uses
+            where: usuarioExcluidoId? { usuario_id: { [Op.ne]: usuarioExcluidoId } } : undefined,
+            include: [{
+              model: db.Cliente,
+              as: "cliente",
+              attributes: ["nombre", "apellido"],
+              required: true
+            }]
+          }]
+        }]
+      });
+      return links;
+    } catch (error) {
+      console.error('Error en findParticipantesByEventoAndSomeRoles:', error);
       throw error;
     }
   }
