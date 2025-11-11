@@ -6,7 +6,7 @@ import { authMiddleware } from "../../../shared/middlewares/authMiddleware";
 
 export class InvitacionController {
   private router: Router;
-  private path: string = "/api/invitations";
+  private path: string = "/api/send-invitations";
 
   // Use Cases (inyectados desde el contenedor)
   private searchUsuariosUseCase = DependencyContainer.getSearchUsuariosUseCase();
