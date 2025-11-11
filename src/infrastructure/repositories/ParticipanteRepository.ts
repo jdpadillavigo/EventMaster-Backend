@@ -3,6 +3,18 @@ import { IParticipanteRepository } from '../../domain/interfaces/IParticipanteRe
 const db = require('../database/models');
 
 export class ParticipanteRepository implements IParticipanteRepository {
+  async findByUsuario(usuarioId: number): Promise<any | null> {
+    try {
+      const participante = await db.Participante.findOne({
+        where: { usuario_id: usuarioId }
+      });
+      
+      return participante;
+    } catch (error) {
+      console.error('Error en findByUsuario:', error);
+      throw error;
+    }
+  }
 
   async findByUsuarioAndRol(usuarioId: number, rolId: number): Promise<any | null> {
     try {

@@ -23,18 +23,22 @@ export class ParticipantesObserver implements Observer {
             soloParaOrganizadores: boolean
         }
         > = {
-        EVENTO_EDITADO: {
-            mensaje: 'El evento fue editado.',
-            soloParaOrganizadores: false,
-        },
-        RECURSO_AGREGADO: {
-            mensaje: 'Se agregó un nuevo recurso al evento.',
-            soloParaOrganizadores: false,
-        },
-        DESVINCULACION: {
-            mensaje: 'Se ha desvinculado del evento.',
-            soloParaOrganizadores: true,
-        },
+            EVENTO_EDITADO: {
+                mensaje: 'El evento fue editado.',
+                soloParaOrganizadores: false,
+            },
+            RECURSO_AGREGADO: {
+                mensaje: 'Se agregó un nuevo recurso al evento.',
+                soloParaOrganizadores: false,
+            },
+            RECURSO_ELIMINADO: {
+                mensaje: 'Se eliminó un recurso del evento.',
+                soloParaOrganizadores: false,
+            },
+            DESVINCULACION: {
+                mensaje: 'Se ha desvinculado del evento.',
+                soloParaOrganizadores: true,
+            },
         };
 
         const estrategia = estrategias[eventType];
@@ -54,7 +58,7 @@ export class ParticipantesObserver implements Observer {
         let destinatarios = await this.eventoParticipanteRepository.findParticipantesByEventoAndRol(eventoId);
 
         if (soloParaOrganizadores) {
-            destinatarios = destinatarios.filter(p => p.rol === TipoRol.ORGANIZADOR || p.rol === TipoRol.COORGANIZADOR);
+            destinatarios = destinatarios.filter(p => p.rol === TipoRol.ORGANIZADOR);
         }
 
         // Filtrar destinatarios   

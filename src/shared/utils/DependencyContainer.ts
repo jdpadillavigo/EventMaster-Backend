@@ -36,6 +36,8 @@ import { ParticipantesObserver } from '../../infrastructure/patterns/observer/Pa
 
 import { VerifyOrganizerGlobal } from '../middlewares/verifyOrganizerGlobal';
 import { VerifyOrganizerInEvent } from '../middlewares/verifyOrganizerInEvent';
+import { VerifyOrganizerOrAttendeeInEvent } from '../middlewares/verifyOrganizerOrAttendeeInEvent';
+
 import { Request, Response, NextFunction } from 'express';
 
 export class DependencyContainer {
@@ -108,7 +110,7 @@ export class DependencyContainer {
   // Middleware
   private static verifyOrganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   private static verifyOrganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
-  
+  private static verifyOrganizerOrAttendeeInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
 
   // Getters para Repositorios
   static getUsuarioRepository(): UsuarioRepository {
@@ -390,7 +392,7 @@ export class DependencyContainer {
     return this.participantesObserver;
   }
 
-  // Getter para el middleware de verificación de organizador/coorganizador global
+  // Getter para el middleware de verificación de organizador global
   static getVerifyOrganizerGlobal() {
     if (!this.verifyOrganizerGlobal) {
       const middleware = new VerifyOrganizerGlobal(
@@ -405,7 +407,7 @@ export class DependencyContainer {
     return this.verifyOrganizerGlobal;
   }
 
-  // Getter para el middleware de verificación de organizador/coorganizador en evento
+  // Getter para el middleware de verificación de organizador en evento
   static getVerifyOrganizerInEvent() {
     if (!this.verifyOrganizerInEvent) {
       const middleware = new VerifyOrganizerInEvent(
@@ -418,5 +420,19 @@ export class DependencyContainer {
       };
     }
     return this.verifyOrganizerInEvent;
+  }
+
+  // Getter para el middleware de verificación de organizador o asistente en evento
+  static getVerifyOrganizerOrAttendeeInEvent() {
+    if (!this.verifyOrganizerOrAttendeeInEvent) {
+      const middleware = new VerifyOrganizerOrAttendeeInEvent(
+        this.getParticipanteRepository(),
+        this.getEventoParticipanteRepository()
+      );
+      this.verifyOrganizerOrAttendeeInEvent = (req: Request, res: Response, next: NextFunction) => {
+        return middleware.verify(req, res, next);
+      };
+    }
+    return this.verifyOrganizerOrAttendeeInEvent;
   }
 }
