@@ -27,12 +27,16 @@ export class ManagedEventsController {
       }
       const result = await this.listManagedEventsUseCase.execute(usuarioId)
       res.json(result)
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ManagedEventsController] Error listando managed:', err)
       res.status(500).json({ success: false, message: 'Error interno' })
     }
   }
 
-  public getRouter(): Router { return this.router }
-  public getPath(): string { return this.path }
+  public getRouter(): Router { 
+    return this.router 
+  }
+  public getPath(): string { 
+    return this.path 
+  }
 }

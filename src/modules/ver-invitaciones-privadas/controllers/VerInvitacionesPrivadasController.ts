@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express'
 import { DependencyContainer } from '../../../shared/utils/DependencyContainer'
+import { authMiddleware } from '../../../shared/middlewares/authMiddleware'
 
 export class VerInvitacionesPrivadasController {
   private router: Router
@@ -9,24 +10,29 @@ export class VerInvitacionesPrivadasController {
 
   constructor() {
     this.router = express.Router()
+
+    // aplicar middleware a todas las rutas
+    this.router.use(authMiddleware)
+
     this.initializeRoutes()
   }
 
   private initializeRoutes(): void {
-    this.router.get('/usuarios/:usuario_id/invitaciones-privadas', this.getInvitaciones.bind(this))
+    this.router.get('/private-invitations', this.getInvitaciones.bind(this))
   }
 
   private async getInvitaciones(req: Request, res: Response): Promise<void> {
     try {
-      const { usuario_id } = req.params
-      const result = await this.getInvitacionesPrivadasUseCase.execute({ usuario_id: Number(usuario_id) })
-      res.status(200).json(result)
-    } catch (error: any) {
-      if (error?.message === 'usuario_id es requerido') {
-        res.status(400).json({ success: false, message: error.message })
+      const usuarioId = Number(req.user?.id)
+      if (!usuarioId || Number.isNaN(usuarioId)) {
+        res.status(401).json({ success: false, message: 'No autenticado' })
         return
       }
-      res.status(500).json({ success: false, message: 'Error interno del servidor' })
+      const result = await this.getInvitacionesPrivadasUseCase.execute({usuario_id: usuarioId})
+      res.json(result)
+    } catch (err: any) {
+      console.error('[VerInvitacionesPrivadasController] Error listando invitaciones privadas:', err)
+      res.status(500).json({ success: false, message: 'Error interno' })
     }
   }
 

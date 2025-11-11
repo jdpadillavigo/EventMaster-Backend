@@ -8,6 +8,7 @@ import { ConfirmarInvitacionController } from "./modules/confirmar-invitacion/co
 import { VerDetalleController } from "./modules/ver-detalle/controllers/VerDetalleController";
 import { ConfirmarPublicoController } from "./modules/confirmar-publico/controllers/ConfirmarPublicoController";
 import { VerInvitacionesPrivadasController } from "./modules/ver-invitaciones-privadas/controllers/VerInvitacionesPrivadasController";
+import { VerNotificacionesAccionController } from "./modules/ver-notificaciones-accion/controllers/VerNotificacionesAccionController";
 import { RegistrarseController } from "./modules/registrarse/controllers/RegistrarseController";
 import { ActivarCuentaController } from "./modules/activar-cuenta/controllers/ActivarCuentaController";
 import { CreateEventoController } from "./modules/eventos-crear/controllers/CreateEventoController";
@@ -100,6 +101,9 @@ app.use(attendedEventsController.getPath(), attendedEventsController.getRouter()
 
 const verInvitacionesPrivadasController = new VerInvitacionesPrivadasController();
 app.use(verInvitacionesPrivadasController.getPath(), verInvitacionesPrivadasController.getRouter());
+
+const verNotificacionesAccionController = new VerNotificacionesAccionController();
+app.use(verNotificacionesAccionController.getPath(), verNotificacionesAccionController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

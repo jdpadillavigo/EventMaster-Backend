@@ -12,9 +12,6 @@ export class GetNotificacionesAccionUseCase {
     }
 
     const rows = await this.notificacionUsuarioRepository.findAllByUsuarioIdWithDetalles(params.usuario_id)
-    if (!rows) {
-      throw new Error('No se encontraron notificaciones')
-    }
 
     const notificaciones_accion: NotificacionAccionItemDto[] = rows.map((r: any) => {
       const notificacion_accion = r.notificacion_accion || null

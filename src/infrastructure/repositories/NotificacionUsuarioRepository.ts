@@ -16,7 +16,7 @@ export class NotificacionUsuarioRepository implements INotificacionUsuarioReposi
     }
   }
 
-    async findAllByUsuarioIdWithDetalles(usuarioId: number): Promise<any[] | null> {
+    async findAllByUsuarioIdWithDetalles(usuarioId: number): Promise<any[]> {
     try {
       const rows = await db.NotificacionUsuario.findAll({
         where: { usuario_id: usuarioId },
