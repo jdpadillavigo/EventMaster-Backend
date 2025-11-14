@@ -35,6 +35,7 @@ import { ListPublicEventsUseCase } from '../../modules/eventos-publicos/use-case
 import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-cases/ListManagedEventsUseCase';
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
 import { DeleteEventoUseCase } from '../../modules/eventos-eliminar/use-cases/DeleteEventoUseCase';
+import { UnjoinEventUseCase } from '../../modules/desvincular-evento/use-cases/UnjoinEventUseCase';
 
 // Use Cases - Recursos
 import { CompartirRecursoUseCase } from '../../modules/compartir-recursos/use-cases/CompartirRecursoUseCase';
@@ -50,6 +51,7 @@ import { InvitacionFabrica } from '../../infrastructure/patterns/factoryMethod/I
 import { VerifyOrganizerGlobal } from '../middlewares/verifyOrganizerGlobal';
 import { VerifyOrganizerInEvent } from '../middlewares/verifyOrganizerInEvent';
 import { VerifyOrganizerOrAttendeeInEvent } from '../middlewares/verifyOrganizerOrAttendeeInEvent';
+import { VerifyAttendeeInEvent } from '../middlewares/verifyAttendeeInEvent';
 
 import { Request, Response, NextFunction } from 'express';
 import { GetProfileUseCase } from 'modules/perfil/use-cases/GetProfileUseCase';
@@ -125,6 +127,7 @@ export class DependencyContainer {
   // Use Cases - Perfil
   private static getProfileUseCase: GetProfileUseCase;
   private static updateProfileUseCase: UpdateProfileUseCase;
+
   // Use Case - Eliminar Evento
   private static deleteEventoUseCase: DeleteEventoUseCase;
 
@@ -133,6 +136,9 @@ export class DependencyContainer {
   private static getRecursosByEventoUseCase: GetRecursosByEventoUseCase;
   private static eliminarRecursoUseCase: EliminarRecursoUseCase;
   
+  // Use Case - Desvincular Evento
+  private static unjoinEventUseCase: UnjoinEventUseCase;
+
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
   private static participantesObserver: ParticipantesObserver;
@@ -145,6 +151,7 @@ export class DependencyContainer {
   private static verifyOrganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   private static verifyOrganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   private static verifyOrganizerOrAttendeeInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+  private static verifyAttendeeInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
 
   // Getters para Repositorios
   static getUsuarioRepository(): UsuarioRepository {
@@ -434,6 +441,18 @@ export class DependencyContainer {
     return this.listAttendedEventsUseCase;
   }
 
+  static getUnjoinEventUseCase(): UnjoinEventUseCase {
+    if (!this.unjoinEventUseCase) {
+      this.unjoinEventUseCase = new UnjoinEventUseCase(
+        this.getEventoParticipanteRepository(),
+        this.getRolRepository(),
+        this.getParticipanteRepository()
+      );
+    }
+    return this.unjoinEventUseCase;
+  }
+
+  // Getter para el middleware de verificación de organizador/coorganizador global
   // Use Cases - Perfil
   static getGetProfileUseCase(): GetProfileUseCase {
     if (!this.getProfileUseCase) {
@@ -581,6 +600,21 @@ export class DependencyContainer {
       };
     }
     return this.verifyOrganizerInEvent;
+  }
+  
+  // Getter para el middleware de verificación de asistente en evento
+  static getVerifyAttendeeInEvent() {
+    if (!this.verifyAttendeeInEvent) {
+      const middleware = new VerifyAttendeeInEvent(
+        this.getRolRepository(),
+        this.getParticipanteRepository(),
+        this.getEventoParticipanteRepository()
+      );
+      this.verifyAttendeeInEvent = (req: Request, res: Response, next: NextFunction) => {
+        return middleware.verify(req, res, next);
+      };
+    }
+    return this.verifyAttendeeInEvent;
   }
 
   // Getter para el middleware de verificación de organizador o asistente en evento

@@ -15,6 +15,7 @@ import { CreateEventoController } from "./modules/eventos-crear/controllers/Crea
 import { PublicEventsController } from "./modules/eventos-publicos/controllers/PublicEventsController";
 import { ManagedEventsController } from "./modules/eventos-gestionados/controllers/ManagedEventsController";
 import { AttendedEventsController } from "./modules/eventos-asistidos/controllers/AttendedEventsController";
+import { DesvincularEventoController } from "./modules/desvincular-evento/controllers/DesvincularEventoController";
 import { DeleteEventoController } from "./modules/eventos-eliminar/controllers/DeleteEventoController";
 import { AuthController } from "./modules/iniciar-sesion/controllers/AuthController";
 import { ProfileController } from "./modules/perfil/controllers/ProfileController";
@@ -124,6 +125,8 @@ app.use(visualizarRecursoController.getPath(), visualizarRecursoController.getRo
 
 const eliminarRecursoController = new EliminarRecursoController();
 app.use(eliminarRecursoController.getPath(), eliminarRecursoController.getRouter());
+const desvincularEventoController = new DesvincularEventoController();
+app.use(desvincularEventoController.getPath(), desvincularEventoController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

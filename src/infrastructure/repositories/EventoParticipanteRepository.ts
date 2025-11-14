@@ -221,4 +221,15 @@ async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?
       throw error;
     }
   }
+
+  async deleteByEventoAndParticipante(eventoId: number, participanteId: number): Promise<void> {
+    try {
+      await db.EventoParticipante.destroy({
+        where: { evento_id: eventoId, participante_id: participanteId }
+      });
+    } catch (error) {
+      console.error('Error en deleteByEventoAndParticipante:', error);
+      throw error;
+    }
+  }
 }

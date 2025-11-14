@@ -11,4 +11,5 @@ export interface IEventoParticipanteRepository {
   findByParticipante(participanteId: number): Promise<any[]>
   findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]>;
   deleteByEvento(eventoId: number): Promise<void>;
+  deleteByEventoAndParticipante(eventoId: number, participanteId: number): Promise<void>;
 }
