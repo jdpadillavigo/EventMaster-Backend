@@ -17,6 +17,7 @@ import { ManagedEventsController } from "./modules/eventos-gestionados/controlle
 import { AttendedEventsController } from "./modules/eventos-asistidos/controllers/AttendedEventsController";
 import { DeleteEventoController } from "./modules/eventos-eliminar/controllers/DeleteEventoController";
 import { AuthController } from "./modules/iniciar-sesion/controllers/AuthController";
+import { ProfileController } from "./modules/perfil/controllers/ProfileController";
 const db = require("./infrastructure/database/models");
 
 dotenv.config();
@@ -99,6 +100,9 @@ app.use(managedEventsController.getPath(), managedEventsController.getRouter());
 
 const attendedEventsController = new AttendedEventsController();
 app.use(attendedEventsController.getPath(), attendedEventsController.getRouter());
+
+const profileController = new ProfileController();
+app.use(profileController.getPath(), profileController.getRouter());
 
 const verInvitacionesPrivadasController = new VerInvitacionesPrivadasController();
 app.use(verInvitacionesPrivadasController.getPath(), verInvitacionesPrivadasController.getRouter());
