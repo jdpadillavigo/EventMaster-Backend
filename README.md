@@ -139,16 +139,23 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 2. Caso de uso: Consultar notificaciones
+Visualizar notificaciones: GET /api/notifications-action
+Visualizar invitaciones privadas: GET /api/private-invitations
+Confirmar asistencia privada: POST /api/invitaciones/respond
+Invitar usuarios: POST /api/send-invitations/send
+
 | ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
 |:--:|
  *Figura 10: Prototipo de Consultar notificaciones* |     
 
 
 ### 3. Caso de uso: Consultar eventos creados
+Visualizar eventos gestionados: GET /api/events/managed
 ![Prototipo de Consultar eventos creados - Parte 1](images/ConsultarEventosCreados0.png) |
 |:--:|
 | *Figura 11: Prototipo de Consultar eventos creados - Parte 1* | 
 
+Eliminar evento: DELETE /api/events/delete/:evento_id
 ![Prototipo de Consultar eventos creados - Parte 2](images/ConsultarEventosCreados2.png) 
 |:--:|
 | *Figura 12: Prototipo de Consultar eventos creados - Parte 2* |    
