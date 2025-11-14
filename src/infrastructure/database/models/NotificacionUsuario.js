@@ -8,13 +8,15 @@ module.exports = (sequelize, DataTypes) => {
       NotificacionUsuario.belongsTo(models.NotificacionAccion, {
         foreignKey: 'notificacion_accion_id',
         targetKey: 'notificacion_id',
-        as: 'notificacion_accion' // el objetivo es la clave foranea
+        as: 'notificacion_accion', // el objetivo es la clave foranea
+        onDelete: 'CASCADE'
       });
       
       // NotificacionUsuario pertenece a un Usuario
       NotificacionUsuario.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
-        as: 'usuario'
+        as: 'usuario',
+        onDelete: 'CASCADE'
       });
     }
   }

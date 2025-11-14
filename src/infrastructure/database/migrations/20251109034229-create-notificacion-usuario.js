@@ -10,7 +10,8 @@ module.exports = {
         references: {
           model: 'NotificacionAccion',
           key: 'notificacion_id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       usuario_id: {
         type: Sequelize.INTEGER,
@@ -18,7 +19,8 @@ module.exports = {
         references: {
           model: 'Usuario',
           key: 'usuario_id'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

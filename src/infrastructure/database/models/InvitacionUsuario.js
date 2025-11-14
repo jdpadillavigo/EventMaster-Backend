@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Una invitación de usuario pertenece a un usuario
       InvitacionUsuario.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
-        as: 'usuario'
+        as: 'usuario',
+        onDelete: 'CASCADE'
       });
       
       // Una invitación de usuario pertenece a un estado
@@ -20,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       InvitacionUsuario.belongsTo(models.Invitacion, {
         foreignKey: 'invitacion_id',
         targetKey: 'notificacion_id', // el objetivo es la clave foránea
-        as: 'invitacion'
+        as: 'invitacion',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -30,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
+    },
+    esParaCoorganizar: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     estado_invitacion_id: {
       type: DataTypes.INTEGER,

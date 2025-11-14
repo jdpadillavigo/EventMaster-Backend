@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Una NotificacionAccion pertenece a una Notificacion
       NotificacionAccion.belongsTo(models.Notificacion, {
         foreignKey: 'notificacion_id',
-        as: 'notificacion'
+        as: 'notificacion',
+        onDelete: 'CASCADE'
       });
       
       // Una NotificacionAccion puede tener muchos Usuarios

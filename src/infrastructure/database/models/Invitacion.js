@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Una invitación pertenece a una notificación
       Invitacion.belongsTo(models.Notificacion, {
         foreignKey: 'notificacion_id',
-        as: 'notificacion'
+        as: 'notificacion',
+        onDelete: 'CASCADE'
       });
       
       // Una invitación puede tener muchas invitaciones de usuario

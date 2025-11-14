@@ -12,6 +12,7 @@ import { NotificacionUsuarioRepository } from '../../infrastructure/repositories
 import { ParticipanteRepository } from '../../infrastructure/repositories/ParticipanteRepository';
 import { RolRepository } from '../../infrastructure/repositories/RolRepository';
 import { UbicacionRepository } from '../../infrastructure/repositories/UbicacionRepository';
+import { EstadoEventoRepository } from '../../infrastructure/repositories/EstadoEventoRepository';
 import { EmailService } from '../../infrastructure/services/EmailService';
 
 import { SearchUsuariosUseCase } from '../../modules/envio-invitaciones/use-cases/SearchUsuariosUseCase';
@@ -31,6 +32,7 @@ import { CreateEventoUseCase } from '../../modules/eventos-crear/use-cases/Creat
 import { ListPublicEventsUseCase } from '../../modules/eventos-publicos/use-cases/ListPublicEventsUseCase';
 import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-cases/ListManagedEventsUseCase';
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
+import { DeleteEventoUseCase } from '../../modules/eventos-eliminar/use-cases/DeleteEventoUseCase';
 
 import { NotificationManager } from '../../infrastructure/patterns/observer/NotificationManager';
 import { ParticipantesObserver } from '../../infrastructure/patterns/observer/ParticipantesObserver';
@@ -59,6 +61,7 @@ export class DependencyContainer {
   private static participanteRepository: ParticipanteRepository;
   private static rolRepository: RolRepository;
   private static ubicacionRepository: UbicacionRepository;
+  private static estadoEventoRepository: EstadoEventoRepository;
 
   // Servicios (Singleton)
   private static emailService: EmailService;
@@ -107,6 +110,9 @@ export class DependencyContainer {
 
   // Use Case - Listar Eventos Asistidos
   private static listAttendedEventsUseCase: ListAttendedEventsUseCase;
+
+  // Use Case - Eliminar Evento
+  private static deleteEventoUseCase: DeleteEventoUseCase;
   
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
@@ -211,6 +217,13 @@ export class DependencyContainer {
       this.ubicacionRepository = new UbicacionRepository();
     }
     return this.ubicacionRepository;
+  }
+
+  static getEstadoEventoRepository(): EstadoEventoRepository {
+    if (!this.estadoEventoRepository) {
+      this.estadoEventoRepository = new EstadoEventoRepository();
+    }
+    return this.estadoEventoRepository;
   }
 
   // Getters para Servicios
@@ -395,6 +408,20 @@ export class DependencyContainer {
       );
     }
     return this.getNotificacionesAccionUseCase;
+  }
+
+  static getDeleteEventoUseCase(): DeleteEventoUseCase {
+    if (!this.deleteEventoUseCase) {
+      this.deleteEventoUseCase = new DeleteEventoUseCase(
+        this.getEventoRepository(),
+        this.getEventoParticipanteRepository(),
+        this.getRolRepository(),
+        this.getUbicacionRepository(),
+        this.getEstadoEventoRepository(),
+        this.getNotificationManager()
+      );
+    }
+    return this.deleteEventoUseCase;
   }
 
   // Getter para el NotificationManager

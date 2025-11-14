@@ -7,13 +7,15 @@ module.exports = (sequelize, DataTypes) => {
       // EventoParticipante pertenece a Evento
       EventoParticipante.belongsTo(models.Evento, {
         foreignKey: 'evento_id',
-        as: 'evento'
+        as: 'evento',
+        onDelete: 'CASCADE'
       });
       
       // EventoParticipante pertenece a Participante
       EventoParticipante.belongsTo(models.Participante, {
         foreignKey: 'participante_id',
-        as: 'participante'
+        as: 'participante',
+        onDelete: 'CASCADE'
       });
     }
   }
