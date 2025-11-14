@@ -144,10 +144,6 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 - **Visualizar notificaciones:** `GET /api/notifications-action`  
 - **Visualizar invitaciones privadas:** `GET /api/private-invitations`  
 - **Confirmar asistencia privada:** `POST /api/invitaciones/respond`  
-- **Invitar usuarios:** `POST /api/send-invitations/send`
-- **Buscar usuarios:** `GET /api/send-invitations/search`
-- **Contar invitaciones pendientes:** `GET /api/send-invitations/count/:evento_id`
-- **Obtener no elegibles:** `GET /api/send-invitations/no-eligible/:evento_id`
 
 | ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
 |:--:|
@@ -168,6 +164,10 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 ### 4 y 5. Caso de uso: Acceder al detalle del evento / Administrar un evento 
 - **Ver detalle de evento:** `GET /api/eventos/:evento_id`
+- **Invitar usuarios:** `POST /api/send-invitations/send`
+- **Buscar usuarios:** `GET /api/send-invitations/search`
+- **Contar invitaciones pendientes:** `GET /api/send-invitations/count/:evento_id`
+- **Obtener no elegibles:** `GET /api/send-invitations/no-eligible/:evento_id`
 - **Visualizar recursos:** `GET /api/visualizar-recursos/evento/:evento_id`
 - **Compartir recurso:** `POST /api/compartir-recursos`
 - **Eliminar recurso:** `DELETE /api/eliminar-recursos`
