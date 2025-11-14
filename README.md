@@ -143,6 +143,9 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 - **Visualizar invitaciones privadas:** `GET /api/private-invitations`  
 - **Confirmar asistencia privada:** `POST /api/invitaciones/respond`  
 - **Invitar usuarios:** `POST /api/send-invitations/send`
+- **Buscar usuarios:** `GET /api/send-invitations/search`
+- **Contar invitaciones pendientes:** `GET /api/send-invitations/count/:evento_id`
+- **Obtener no elegibles:** `GET /api/send-invitations/no-eligible/:evento_id`
 
 | ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
 |:--:|
