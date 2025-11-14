@@ -72,7 +72,7 @@ export class SendInvitacionUseCase {
       if (yaEnEvento) {
         resultados.push({ 
           usuario_id: usuarioData.usuario_id, 
-          status: 'Already in event as co-organizer' 
+          status: 'Already in event' 
         });
         continue;
       }
