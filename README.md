@@ -139,13 +139,13 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 2. Caso de uso: Consultar notificaciones
-- **Visualizar notificaciones:** `GET /api/notifications-action`  
-- **Visualizar invitaciones privadas:** `GET /api/private-invitations`  
-- **Confirmar asistencia privada:** `POST /api/invitaciones/respond`  
-- **Invitar usuarios:** `POST /api/send-invitations/send`
-- **Buscar usuarios:** `GET /api/send-invitations/search`
-- **Contar invitaciones pendientes:** `GET /api/send-invitations/count/:evento_id`
-- **Obtener no elegibles:** `GET /api/send-invitations/no-eligible/:evento_id`
+- **Visualizar notificaciones (protegido):** `GET /api/notifications-action`  
+- **Visualizar invitaciones privadas (protegido):** `GET /api/private-invitations`  
+- **Confirmar asistencia privada (protegido):** `POST /api/invitaciones/respond`  
+- **Invitar usuarios (protegido):** `POST /api/send-invitations/send`
+- **Buscar usuarios (protegido):** `GET /api/send-invitations/search`
+- **Contar invitaciones pendientes (protegido):** `GET /api/send-invitations/count/:evento_id`
+- **Obtener no elegibles (protegido):** `GET /api/send-invitations/no-eligible/:evento_id`
 
 | ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
 |:--:|
@@ -153,8 +153,8 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 3. Caso de uso: Consultar eventos creados
-- **Visualizar eventos gestionados:** `GET /api/events/managed`
-- **Eliminar evento:** `DELETE /api/events/delete/:evento_id`
+- **Visualizar eventos gestionados (protegido):** `GET /api/events/managed`
+- **Eliminar evento (protegido):** `DELETE /api/events/delete/:evento_id`
 
 ![Prototipo de Consultar eventos creados - Parte 1](images/ConsultarEventosCreados0.png) |
 |:--:|
