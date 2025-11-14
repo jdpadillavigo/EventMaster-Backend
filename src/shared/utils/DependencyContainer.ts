@@ -13,6 +13,8 @@ import { ParticipanteRepository } from '../../infrastructure/repositories/Partic
 import { RolRepository } from '../../infrastructure/repositories/RolRepository';
 import { UbicacionRepository } from '../../infrastructure/repositories/UbicacionRepository';
 import { EstadoEventoRepository } from '../../infrastructure/repositories/EstadoEventoRepository';
+import { RecursoRepository } from '../../infrastructure/repositories/RecursoRepository';
+import { TipoRecursoRepository } from '../../infrastructure/repositories/TipoRecursoRepository';
 import { EmailService } from '../../infrastructure/services/EmailService';
 
 import { SearchUsuariosUseCase } from '../../modules/envio-invitaciones/use-cases/SearchUsuariosUseCase';
@@ -34,6 +36,11 @@ import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
 import { DeleteEventoUseCase } from '../../modules/eventos-eliminar/use-cases/DeleteEventoUseCase';
 import { UnjoinEventUseCase } from '../../modules/desvincular-evento/use-cases/UnjoinEventUseCase';
+
+// Use Cases - Recursos
+import { CompartirRecursoUseCase } from '../../modules/compartir-recursos/use-cases/CompartirRecursoUseCase';
+import { GetRecursosByEventoUseCase } from '../../modules/visualizar-recursos/use-cases/GetRecursosByEventoUseCase';
+import { EliminarRecursoUseCase } from '../../modules/eliminar-recursos/use-cases/EliminarRecursoUseCase';
 
 import { NotificationManager } from '../../infrastructure/patterns/observer/NotificationManager';
 import { ParticipantesObserver } from '../../infrastructure/patterns/observer/ParticipantesObserver';
@@ -66,6 +73,8 @@ export class DependencyContainer {
   private static rolRepository: RolRepository;
   private static ubicacionRepository: UbicacionRepository;
   private static estadoEventoRepository: EstadoEventoRepository;
+  private static recursoRepository: RecursoRepository;
+  private static tipoRecursoRepository: TipoRecursoRepository;
 
   // Servicios (Singleton)
   private static emailService: EmailService;
@@ -122,6 +131,11 @@ export class DependencyContainer {
   // Use Case - Eliminar Evento
   private static deleteEventoUseCase: DeleteEventoUseCase;
 
+  // Use Cases - Recursos
+  private static compartirRecursoUseCase: CompartirRecursoUseCase;
+  private static getRecursosByEventoUseCase: GetRecursosByEventoUseCase;
+  private static eliminarRecursoUseCase: EliminarRecursoUseCase;
+  
   // Use Case - Desvincular Evento
   private static unjoinEventUseCase: UnjoinEventUseCase;
 
@@ -236,6 +250,20 @@ export class DependencyContainer {
       this.estadoEventoRepository = new EstadoEventoRepository();
     }
     return this.estadoEventoRepository;
+  }
+
+  static getRecursoRepository(): RecursoRepository {
+    if (!this.recursoRepository) {
+      this.recursoRepository = new RecursoRepository();
+    }
+    return this.recursoRepository;
+  }
+
+  static getTipoRecursoRepository(): TipoRecursoRepository {
+    if (!this.tipoRecursoRepository) {
+      this.tipoRecursoRepository = new TipoRecursoRepository();
+    }
+    return this.tipoRecursoRepository;
   }
 
   // Getters para Servicios
@@ -466,6 +494,39 @@ export class DependencyContainer {
       );
     }
     return this.deleteEventoUseCase;
+  }
+
+  // Getters para Use Cases - Recursos
+  static getCompartirRecursoUseCase(): CompartirRecursoUseCase {
+    if (!this.compartirRecursoUseCase) {
+      this.compartirRecursoUseCase = new CompartirRecursoUseCase(
+        this.getRecursoRepository(),
+        this.getTipoRecursoRepository(),
+        this.getEventoRepository()
+      );
+    }
+    return this.compartirRecursoUseCase;
+  }
+
+
+  static getGetRecursosByEventoUseCase(): GetRecursosByEventoUseCase {
+    if (!this.getRecursosByEventoUseCase) {
+      this.getRecursosByEventoUseCase = new GetRecursosByEventoUseCase(
+        this.getRecursoRepository(),
+        this.getEventoRepository()
+      );
+    }
+    return this.getRecursosByEventoUseCase;
+  }
+
+  static getEliminarRecursoUseCase(): EliminarRecursoUseCase {
+    if (!this.eliminarRecursoUseCase) {
+      this.eliminarRecursoUseCase = new EliminarRecursoUseCase(
+        this.getRecursoRepository(),
+        this.getEventoRepository()
+      );
+    }
+    return this.eliminarRecursoUseCase;
   }
 
   // Getter para el NotificationManager
