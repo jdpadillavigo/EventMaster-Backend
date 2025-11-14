@@ -133,6 +133,8 @@ http://localhost:5000/api
 A continuación, se muestran los endpoints para cada caso de uso del Sistema de Gestión de Eventos "EventMaster":
 
 ### 1. Caso de uso: Crear evento
+- **Crear evento:** `POST /api/eventos`
+
 | ![Prototipo de Crear evento](images/CrearEvento.png) |
 |:--:|
 | *Figura 9: Prototipo de Crear evento* |    
@@ -183,6 +185,9 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 | *Figura 15: Prototipo de Acceder al detalle del evento / Administrar un evento - Parte 3* | 
 
 ### 6. Caso de uso: Consultar eventos asistidos
+- **Consultar eventos asistidos:** `GET /api/events/attended/:usuario_id`
+- **Desvincularme de un evento:** `DELETE /api/eventos/:evento_id/desvincularme`
+
 | ![Prototipo de Consultar eventos asistidos](images/ConsultarEventosAsistidos.png) |
 |:--:|
 | *Figura 16: Prototipo de Consultar eventos asistidos* | 
@@ -203,6 +208,9 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 | *Figura 18: Prototipo de Iniciar sesión* | 
 
 ### 9. Caso de uso: Explorar eventos públicos
+- **Explorar eventos públicos:** `GET /api/events/public`
+- **Confirmar asistencia pública:** `GET /api/eventos/:evento_id/attendance/public`
+
 | ![Prototipo de Explorar eventos públicos](images/ExplorarEventosPublicos.png) |
 |:--:|
 | *Figura 19: Prototipo de Explorar eventos públicos* | 
