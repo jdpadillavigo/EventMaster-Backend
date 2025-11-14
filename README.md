@@ -157,7 +157,6 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 |:--:|
 | *Figura 11: Prototipo de Consultar eventos creados - Parte 1* | 
 
-Eliminar evento: DELETE /api/events/delete/:evento_id
 ![Prototipo de Consultar eventos creados - Parte 2](images/ConsultarEventosCreados2.png) 
 |:--:|
 | *Figura 12: Prototipo de Consultar eventos creados - Parte 2* |    
