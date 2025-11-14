@@ -43,6 +43,8 @@ import { VerifyOrganizerInEvent } from '../middlewares/verifyOrganizerInEvent';
 import { VerifyOrganizerOrAttendeeInEvent } from '../middlewares/verifyOrganizerOrAttendeeInEvent';
 
 import { Request, Response, NextFunction } from 'express';
+import { GetProfileUseCase } from 'modules/perfil/use-cases/GetProfileUseCase';
+import { UpdateProfileUseCase } from 'modules/perfil/use-cases/UpdateProfileUseCase';
 
 export class DependencyContainer {
   // Repositorios (Singleton)
@@ -107,6 +109,10 @@ export class DependencyContainer {
 
   // Use Case - Listar Eventos Asistidos
   private static listAttendedEventsUseCase: ListAttendedEventsUseCase;
+
+  // Use Cases - Perfil
+  private static getProfileUseCase: GetProfileUseCase;
+  private static updateProfileUseCase: UpdateProfileUseCase;
   
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
@@ -386,6 +392,26 @@ export class DependencyContainer {
       );
     }
     return this.listAttendedEventsUseCase;
+  }
+
+  // Use Cases - Perfil
+  static getGetProfileUseCase(): GetProfileUseCase {
+    if (!this.getProfileUseCase) {
+      this.getProfileUseCase = new GetProfileUseCase(
+        this.getUsuarioRepository()
+      );
+    }
+    return this.getProfileUseCase;
+  }
+
+  static getUpdateProfileUseCase(): UpdateProfileUseCase {
+    if (!this.updateProfileUseCase) {
+      this.updateProfileUseCase = new UpdateProfileUseCase(
+        this.getUsuarioRepository(),
+        this.getClienteRepository(),
+      );
+    }
+    return this.updateProfileUseCase;
   }
 
   static getGetNotificacionesAccionUseCase(): GetNotificacionesAccionUseCase {

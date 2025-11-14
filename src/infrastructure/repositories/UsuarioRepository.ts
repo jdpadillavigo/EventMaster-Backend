@@ -10,7 +10,7 @@ export class UsuarioRepository implements IUsuarioRepository {
         include: [{
           model: db.Cliente,
           as: 'cliente',
-          attributes: ['nombre', 'apellido']
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -27,7 +27,8 @@ export class UsuarioRepository implements IUsuarioRepository {
         where: { correo: email },
         include: [{
           model: db.Cliente,
-          as: 'cliente'
+          as: 'cliente',
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -45,7 +46,7 @@ export class UsuarioRepository implements IUsuarioRepository {
         include: [{
           model: db.Cliente,
           as: 'cliente',
-          attributes: ['nombre', 'apellido']
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -70,7 +71,7 @@ export class UsuarioRepository implements IUsuarioRepository {
           {
             model: db.Cliente,
             as: 'cliente',
-            attributes: ['nombre', 'apellido'],
+            attributes: ['nombre', 'apellido', 'foto_perfil'],
             required: true
           }
         ],
