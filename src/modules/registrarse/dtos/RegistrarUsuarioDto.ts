@@ -14,5 +14,7 @@ export interface RegistrarUsuarioResponseDto {
     nombre: string;
     apellido: string;
     isActive: boolean;
+    activation_token?: string;
+    token_expires_at?: Date;
   };
 }
