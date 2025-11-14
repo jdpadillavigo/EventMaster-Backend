@@ -150,7 +150,9 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 3. Caso de uso: Consultar eventos creados
-Visualizar eventos gestionados: GET /api/events/managed
+- **Visualizar eventos gestionados:** `GET /api/events/managed`
+- **Eliminar evento:** `DELETE /api/events/delete/:evento_id`
+
 ![Prototipo de Consultar eventos creados - Parte 1](images/ConsultarEventosCreados0.png) |
 |:--:|
 | *Figura 11: Prototipo de Consultar eventos creados - Parte 1* | 
