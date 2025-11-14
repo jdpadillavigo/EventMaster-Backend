@@ -173,29 +173,18 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
     throw error;
   }
 }
-  async detach(eventoId: number, participanteId: number): Promise<void> {
-  try {
-    // Si tu tabla tiene deleted_at/activo, hacemos soft delete; si no, hard delete.
-    const qi = db.sequelize.getQueryInterface()
-    let hasDeletedAt = false
-    try {
-      const desc = await qi.describeTable('evento_participante')
-      hasDeletedAt = !!desc.deleted_at
-    } catch (_) {}
 
-    if (hasDeletedAt) {
-      await db.EventoParticipante.update(
-        { deleted_at: db.Sequelize.fn('NOW'), activo: false },
-        { where: { evento_id: eventoId, participante_id: participanteId, deleted_at: null } }
-      )
-    } else {
+  async delete(eventoId: number, participanteId: number): Promise<void> {
+    try {
       await db.EventoParticipante.destroy({
-        where: { evento_id: eventoId, participante_id: participanteId }
-      })
+        where: { 
+          evento_id: eventoId, 
+          participante_id: participanteId 
+        }
+      });
+    } catch (error) {
+      console.error('Error en delete:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error en detach:', error)
-    throw error
-  }
   }
 }

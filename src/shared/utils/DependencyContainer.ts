@@ -27,9 +27,11 @@ import { CreateEventoUseCase } from '../../modules/eventos-crear/use-cases/Creat
 import { ListPublicEventsUseCase } from '../../modules/eventos-publicos/use-cases/ListPublicEventsUseCase';
 import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-cases/ListManagedEventsUseCase';
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
+import { UnjoinEventUseCase } from '../../modules/desvincular-evento/use-cases/UnjoinEventUseCase';
 
 import { VerifyOrganizerGlobal } from '../middlewares/verifyOrganizerGlobal';
 import { VerifyOrganizerInEvent } from '../middlewares/verifyOrganizerInEvent';
+import { VerifyAttendeeInEvent } from '../middlewares/verifyAttendeeInEvent';
 import { Request, Response, NextFunction } from 'express';
 
 export class DependencyContainer {
@@ -79,12 +81,12 @@ export class DependencyContainer {
   private static listPublicEventsUseCase: ListPublicEventsUseCase;
   private static listManagedEventsUseCase: ListManagedEventsUseCase;
   private static listAttendedEventsUseCase: ListAttendedEventsUseCase;
-  
+  private static unjoinEventUseCase: UnjoinEventUseCase;
+
   // Middleware
   private static verifyOrganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   private static verifyOrganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
-  private static unjoinEventUseCase: UnjoinEventUseCase;
-  
+  private static verifyAttendeeInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
 
   // Getters para Repositorios
   static getUsuarioRepository(): UsuarioRepository {
@@ -332,6 +334,17 @@ export class DependencyContainer {
     return this.listAttendedEventsUseCase;
   }
 
+  static getUnjoinEventUseCase(): UnjoinEventUseCase {
+    if (!this.unjoinEventUseCase) {
+      this.unjoinEventUseCase = new UnjoinEventUseCase(
+        this.getEventoParticipanteRepository(),
+        this.getRolRepository(),
+        this.getParticipanteRepository()
+      );
+    }
+    return this.unjoinEventUseCase;
+  }
+
   // Getter para el middleware de verificación de organizador/coorganizador global
   static getVerifyOrganizerGlobal() {
     if (!this.verifyOrganizerGlobal) {
@@ -361,16 +374,20 @@ export class DependencyContainer {
     }
     return this.verifyOrganizerInEvent;
   }
-  static getUnjoinEventUseCase() {
-  if (!this.unjoinEventUseCase) {
-    this.unjoinEventUseCase = new UnjoinEventUseCase(
-      this.getEventoParticipanteRepository(),
-      this.getRolRepository(),
-      this.getParticipanteRepository()
-    );
+  
+  // Getter para el middleware de verificación de asistente en evento
+  static getVerifyAttendeeInEvent() {
+    if (!this.verifyAttendeeInEvent) {
+      const middleware = new VerifyAttendeeInEvent(
+        this.getRolRepository(),
+        this.getParticipanteRepository(),
+        this.getEventoParticipanteRepository()
+      );
+      this.verifyAttendeeInEvent = (req: Request, res: Response, next: NextFunction) => {
+        return middleware.verify(req, res, next);
+      };
+    }
+    return this.verifyAttendeeInEvent;
   }
-  return this.unjoinEventUseCase;
+  
 }
-
-}
-import { UnjoinEventUseCase } from 'modules/eventos-asistidos/use-cases/UnjoinEventUseCase'

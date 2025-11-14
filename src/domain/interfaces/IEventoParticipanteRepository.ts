@@ -9,5 +9,5 @@ export interface IEventoParticipanteRepository {
   findByEventoAndParticipante(eventoId: number, participanteId: number): Promise<any | null>;
   create(eventoId: number, participanteId: number): Promise<any>;
   findByParticipante(participanteId: number): Promise<any[]>;
-  detach(eventoId: number, participanteId: number): Promise<void>;
+  delete(eventoId: number, participanteId: number): Promise<void>;
 }

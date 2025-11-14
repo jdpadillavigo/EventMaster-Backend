@@ -33,7 +33,7 @@ export class VerifyAttendeeInEvent {
 
       const participante = await this.participanteRepository.findByUsuarioAndRol(userId, rolAsistente.rol_id)
       if (!participante) {
-        res.status(403).json({ success: false, message: "No estás inscrito en este evento" })
+        res.status(403).json({ success: false, message: "No tienes permisos para realizar esta acción. Se requiere ser asistente del evento." })
         return
       }
 
@@ -41,7 +41,7 @@ export class VerifyAttendeeInEvent {
         .findByEventoAndParticipante(eventoId, participante.participante_id)
 
       if (!vinculo) {
-        res.status(403).json({ success: false, message: "No estás inscrito en este evento" })
+        res.status(403).json({ success: false, message: "No tienes permisos para realizar esta acción. Se requiere ser asistente del evento." })
         return
       }
 
