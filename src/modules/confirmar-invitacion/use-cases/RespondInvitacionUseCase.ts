@@ -4,7 +4,8 @@ import { IParticipanteRepository } from '../../../domain/interfaces/IParticipant
 import { IRolRepository } from '../../../domain/interfaces/IRolRepository';
 import { IEventoParticipanteRepository } from '../../../domain/interfaces/IEventoParticipanteRepository';
 import { IEventoRepository } from '../../../domain/interfaces/IEventoRepository';
-import { RespondInvitacionDto, RespondInvitacionResultDto } from '../dtos/RespondInvitacionDto';
+import { RespondInvitacionDto } from '../dtos/RespondInvitacionDto';
+import { RespondInvitacionResultDto } from '../dtos/RespondInvitacionResultDto';
 import { EstadoInvitacionEnum } from '../../../domain/value-objects/EstadoInvitacion';
 
 export class RespondInvitacionUseCase {

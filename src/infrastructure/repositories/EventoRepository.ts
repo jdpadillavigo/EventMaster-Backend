@@ -47,17 +47,14 @@ export class EventoRepository implements IEventoRepository {
   }
 
   async delete(id: number): Promise<boolean> {
-  try {
-    const [affected] = await db.Evento.update(
-      { estadoEvento: 3, deleted_at: db.Sequelize.fn('NOW') },
-      { where: { evento_id: id, deleted_at: null } }
-    );
-    return affected > 0;
-  } catch (error) {
-    console.error('Error en delete (soft):', error);
-    throw error;
+    try {
+      const result = await db.Evento.destroy({ where: { evento_id: id } });
+      return result > 0;
+    } catch (error) {
+      console.error('Error en delete:', error);
+      throw error;
+    }
   }
-}
 
   async findAll(): Promise<any[]> {
     try {
@@ -199,8 +196,6 @@ export class EventoRepository implements IEventoRepository {
       console.error('Error en findPublicEvents:', error);
       throw error;
     }
-    
-    
   }
 
   async findManagedEventsByUsuario(usuarioId: number): Promise<any[]> {

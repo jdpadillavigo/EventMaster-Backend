@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'usuario_id',
         as: 'invitacionesUsuario'
       });
+
+      // Un usuario puede tener muchas notificaciones
+      Usuario.belongsToMany(models.NotificacionAccion, {
+        through: models.NotificacionUsuario,
+        foreignKey: 'usuario_id',
+        as: 'notificacionesUsuario'
+      });
       
       // Un usuario puede ser un cliente
       Usuario.hasOne(models.Cliente, {

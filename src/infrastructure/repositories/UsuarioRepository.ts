@@ -1,5 +1,4 @@
 import { IUsuarioRepository } from '../../domain/interfaces/IUsuarioRepository';
-import { LIMITE_RESULTADOS_BUSQUEDA } from '../../domain/value-objects/Constantes';
 
 const db = require('../database/models');
 
@@ -11,7 +10,7 @@ export class UsuarioRepository implements IUsuarioRepository {
         include: [{
           model: db.Cliente,
           as: 'cliente',
-          attributes: ['nombre', 'apellido']
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -28,7 +27,8 @@ export class UsuarioRepository implements IUsuarioRepository {
         where: { correo: email },
         include: [{
           model: db.Cliente,
-          as: 'cliente'
+          as: 'cliente',
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -46,7 +46,7 @@ export class UsuarioRepository implements IUsuarioRepository {
         include: [{
           model: db.Cliente,
           as: 'cliente',
-          attributes: ['nombre', 'apellido']
+          attributes: ['nombre', 'apellido', 'foto_perfil']
         }]
       });
       
@@ -57,21 +57,33 @@ export class UsuarioRepository implements IUsuarioRepository {
     }
   }
 
-  async searchByQuery(query: string, limit: number = LIMITE_RESULTADOS_BUSQUEDA): Promise<any[]> {
+  // optimizado para PostgreSQL
+  async searchActiveByQuery(query: string, limit: number): Promise<any[]> {
     try {
+      // Normaliza y divide la búsqueda en palabras (ignora espacios múltiples)
+      const searchTerms = query
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
       const usuarios = await db.Usuario.findAll({
-        include: [{
-          model: db.Cliente,
-          as: 'cliente',
-          attributes: ['nombre', 'apellido'],
-          required: true
-        }],
+        include: [
+          {
+            model: db.Cliente,
+            as: 'cliente',
+            attributes: ['nombre', 'apellido', 'foto_perfil'],
+            required: true
+          }
+        ],
         where: {
-          [db.Sequelize.Op.or]: [
-            { correo: { [db.Sequelize.Op.iLike ?? db.Sequelize.Op.like]: `%${query}%` } },
-            { '$cliente.nombre$': { [db.Sequelize.Op.iLike ?? db.Sequelize.Op.like]: `%${query}%` } },
-            { '$cliente.apellido$': { [db.Sequelize.Op.iLike ?? db.Sequelize.Op.like]: `%${query}%` } }
-          ]
+          isActive: true,
+          [db.Sequelize.Op.and]: searchTerms.map(term => ({
+            [db.Sequelize.Op.or]: [
+              { correo: { [db.Sequelize.Op.iLike]: `%${term}%` } },
+              { '$cliente.nombre$': { [db.Sequelize.Op.iLike]: `%${term}%` } },
+              { '$cliente.apellido$': { [db.Sequelize.Op.iLike]: `%${term}%` } }
+            ]
+          }))
         },
         attributes: ['usuario_id', 'correo'],
         limit

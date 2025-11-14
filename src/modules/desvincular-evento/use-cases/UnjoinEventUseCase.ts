@@ -34,7 +34,7 @@ export class UnjoinEventUseCase {
       }
 
       // Eliminar la relación evento-participante
-      await this.eventoParticipanteRepository.delete(evento_id, participante.participante_id);
+      await this.eventoParticipanteRepository.deleteByEventoAndParticipante(evento_id, participante.participante_id);
 
       return {
         success: true,

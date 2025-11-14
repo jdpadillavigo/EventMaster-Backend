@@ -9,6 +9,11 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
+      esParaCoorganizar: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       estado_invitacion_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -23,7 +28,8 @@ module.exports = {
         references: {
           model: 'Invitacion',
           key: 'notificacion_id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       usuario_id: {
         type: Sequelize.INTEGER,
@@ -31,7 +37,8 @@ module.exports = {
         references: {
           model: 'Usuario',
           key: 'usuario_id'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

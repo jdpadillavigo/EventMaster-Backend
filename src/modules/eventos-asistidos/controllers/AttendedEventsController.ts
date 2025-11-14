@@ -32,5 +32,5 @@ export class AttendedEventsController {
   }
 
   public getRouter(): Router { return this.router }
-  public getPath(): string { return this.path }
+  public getPath(): string { return this.path }
 }

@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Un participante pertenece a un usuario
       Participante.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
-        as: 'usuario'
+        as: 'usuario',
+        onDelete: 'CASCADE'
       });
       
       // Un participante tiene un rol
@@ -38,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Usuario',
         key: 'usuario_id'
       }
-      // Removido unique: true para permitir múltiples participantes por usuario
     },
     rol_id: {
       type: DataTypes.INTEGER,

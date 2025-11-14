@@ -5,8 +5,3 @@ export enum EstadoInvitacionEnum {
     RECHAZADA = "Rechazada"
 }
 
-// Tipo para usuarios no elegibles
-export enum TipoNoElegible {
-    PENDIENTE = "pendiente",
-    PARTICIPANTE = "participante"
-}

@@ -1,4 +1,8 @@
 // Tipos de notificaciones disponibles en el sistema
 export enum TipoNotificacion {
-    INVITACION = "INVITACION"
+    INVITACION = "INVITACION",
+    ACCION = "ACCION",
+    EVENTO_EDITADO = "EVENTO_EDITADO",
+    RECURSO_AGREGADO = "RECURSO_AGREGADO",
+    EVENTO_CANCELADO = "EVENTO_CANCELADO"
 }

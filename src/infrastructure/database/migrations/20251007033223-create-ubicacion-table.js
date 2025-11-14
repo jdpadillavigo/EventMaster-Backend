@@ -28,6 +28,7 @@ module.exports = {
           model: 'Evento',
           key: 'evento_id'
         },
+        onDelete: 'CASCADE',
         unique: true
       }
     });

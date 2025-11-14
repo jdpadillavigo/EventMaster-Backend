@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Un cliente pertenece a un usuario
       Cliente.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
-        as: 'usuario'
+        as: 'usuario',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -25,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     apellido: {
       type: DataTypes.STRING(50),
       allowNull: false
+    },
+    foto_perfil: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'URL o base64 de la foto de perfil (puede exceder 255 chars)'
     },
     usuario_id: {
       type: DataTypes.INTEGER,

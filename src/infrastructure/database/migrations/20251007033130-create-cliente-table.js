@@ -17,6 +17,11 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false
       },
+      foto_perfil: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+        comment: 'URL o base64 de la foto de perfil (puede exceder 255 chars)'
+      },
       usuario_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -24,6 +29,7 @@ module.exports = {
           model: 'Usuario',
           key: 'usuario_id'
         },
+        onDelete: 'CASCADE',
         unique: true
       }
     });

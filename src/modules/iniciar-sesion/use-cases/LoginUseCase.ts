@@ -1,5 +1,6 @@
 import { UsuarioRepository } from '../../../infrastructure/repositories/UsuarioRepository'
-import { LoginParamsDto, LoginResultDto } from '../dtos/LoginDto'
+import { LoginParamsDto } from '../dtos/LoginParamsDto'
+import { LoginResultDto } from '../dtos/LoginResultDto'
 
 export class LoginUseCase {
   constructor(private usuarioRepository: UsuarioRepository) {}
@@ -32,7 +33,8 @@ export class LoginUseCase {
         correo: user.correo,
         nombre: user.cliente?.nombre ?? null,
         apellido: user.cliente?.apellido ?? null,
-      },
+        foto_perfil: user.cliente?.foto_perfil ?? null
+      }
     }
     return result
   }

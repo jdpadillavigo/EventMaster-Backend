@@ -10,7 +10,7 @@ module.exports = {
         isActive: true
       },
       {
-        clave: 'user3',
+        clave: 'user2',
         correo: 'user2@eventos.com',
         isActive: true
       },

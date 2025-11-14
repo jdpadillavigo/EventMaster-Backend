@@ -9,7 +9,7 @@ export class GetParticipantesByEventoUseCase {
       throw new Error('evento_id es requerido');
     }
 
-    const participantes = await this.eventoParticipanteRepository.findParticipantesByEvento(eventoId);
+    const participantes = await this.eventoParticipanteRepository.findParticipantesByEventoAndRol(eventoId);
     return participantes;
   }
 }
