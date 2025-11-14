@@ -130,272 +130,64 @@ npm test             # Ejecutar tests (pendiente implementar)
 http://localhost:5000/api
 ```
 
-### Invitaciones
+A continuación, se muestran los endpoints para cada caso de uso del Sistema de Gestión de Eventos "EventMaster":
 
-#### 1. Buscar usuarios
-```http
-GET /api/invitations/search?query=juan
-```
+### 1. Caso de uso: Crear evento
+| ![Prototipo de Crear evento](images/CrearEvento.png) |
+|:--:|
+| *Figura 9: Prototipo de Crear evento* |    
 
-**Response:**
-```json
-{
-  "success": true,
-  "usuarios": [
-    {
-      "usuario_id": 1,
-      "correo": "juan@example.com",
-      "nombre": "Juan",
-      "apellido": "Pérez"
-    }
-  ]
-}
-```
 
-#### 2. Enviar invitaciones
-```http
-POST /api/invitations/send
-Content-Type: application/json
+### 2. Caso de uso: Consultar notificaciones
+| ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
+|:--:|
+ *Figura 10: Prototipo de Consultar notificaciones* |     
 
-{
-  "evento_id": 1,
-  "usuario_ids": [2, 3, 4],
-  "fechaLimite": "2025-12-31T23:59:59Z"
-}
-```
 
-**Response:**
-```json
-{
-  "success": true,
-  "notificacion_id": 5,
-  "resultados": [
-    {
-      "usuario_id": 2,
-      "status": "Invitation sent",
-      "invitacion_usuario_id": 10
-    },
-    {
-      "usuario_id": 3,
-      "status": "Already invited"
-    }
-  ]
-}
-```
+### 3. Caso de uso: Consultar eventos creados
+![Prototipo de Consultar eventos creados - Parte 1](images/ConsultarEventosCreados0.png) |
+|:--:|
+| *Figura 11: Prototipo de Consultar eventos creados - Parte 1* | 
 
-#### 3. Obtener usuarios no elegibles
-```http
-GET /api/invitations/no-eligible/1
-```
+![Prototipo de Consultar eventos creados - Parte 2](images/ConsultarEventosCreados2.png) 
+|:--:|
+| *Figura 12: Prototipo de Consultar eventos creados - Parte 2* |    
 
-**Response:**
-```json
-{
-  "success": true,
-  "noElegibles": [
-    {
-      "usuario_id": 2,
-      "correo": "maria@example.com",
-      "nombre": "María",
-      "apellido": "García",
-      "tipo": "pendiente"
-    },
-    {
-      "usuario_id": 3,
-      "correo": "pedro@example.com",
-      "nombre": "Pedro",
-      "apellido": "López",
-      "tipo": "participante"
-    }
-  ]
-}
-```
+### 4 y 5. Caso de uso: Acceder al detalle del evento / Administrar un evento 
+| ![Prototipo de Acceder al detalle del evento - Parte 1](images/DetalleYAdministrar1.png) |
+|:--:|
+| *Figura 13: Prototipo de Acceder al detalle del evento / Administrar un evento - Parte 1* | 
 
-#### 4. Contar invitaciones pendientes
-```http
-GET /api/invitations/count/1
-```
+| ![Prototipo de Acceder al detalle del evento - Parte 2](images/DetalleYAdministrar2.png) |
+|:--:|
+| *Figura 14: Prototipo de Acceder al detalle del evento / Administrar un evento - Parte 2* | 
 
-**Response:**
-```json
-{
-  "success": true,
-  "pendientes": 15,
-  "limite": 50
-}
-```
+| ![Prototipo de Acceder al detalle del evento - Parte 3](images/DetalleYAdministrar3.png) |
+|:--:|
+| *Figura 15: Prototipo de Acceder al detalle del evento / Administrar un evento - Parte 3* | 
 
-## 🗂️ Estructura del Proyecto
+### 6. Caso de uso: Consultar eventos asistidos
+| ![Prototipo de Consultar eventos asistidos](images/ConsultarEventosAsistidos.png) |
+|:--:|
+| *Figura 16: Prototipo de Consultar eventos asistidos* | 
 
-```
-EventMaster-Backend/
-├── src/
-│   ├── modules/                 # Módulos por Historia de Usuario
-│   │   └── invitaciones/        # Historia: "Invitar usuarios a eventos"
-│   │       ├── dtos/            # SearchUsuariosDto, SendInvitacionDto
-│   │       ├── use-cases/       # SearchUsuarios, SendInvitacion, GetNoElegibles, Count
-│   │       └── controllers/     # InvitacionController
-│   │
-│   ├── domain/                  # Lógica de negocio compartida
-│   │   ├── value-objects/       # Enums y constantes
-│   │   └── interfaces/          # IUsuarioRepository, IEventoRepository
-│   │
-│   ├── infrastructure/          # Implementaciones técnicas compartidas
-│   │   ├── database/            # Sequelize (models, config, migrations, seeders)
-│   │   ├── repositories/        # UsuarioRepository, EventoRepository
-│   │   └── factories/           # NotificacionFabrica, InvitacionFabrica (Factory Method)
-│   │
-│   ├── shared/                  # Código compartido
-│   │   └── utils/               # DependencyContainer, helpers
-│   │
-│   └── index.ts                 # Punto de entrada
-│
-├── .env.example                 # Plantilla de variables de entorno
-├── .sequelizerc                 # Configuración de Sequelize CLI
-├── package.json
-├── tsconfig.json
-├── ARQUITECTURA_SIMPLIFICADA.md # Documentación de arquitectura
-└── README.md                    # Este archivo
-```
 
-## 🎨 Patrones de Diseño
+### 7. Caso de uso: Registrarse
+| ![Prototipo](images/Registrarse.png) |  
+|:--:|
+| *Figura 17: Prototipo de Registrarse* | 
 
-- **Repository Pattern**: Abstracción del acceso a datos
-- **Use Case Pattern**: Encapsulación de lógica de negocio
-- **Dependency Injection**: Inyección de dependencias
-- **Factory Method Pattern**: Creación de notificaciones e invitaciones (ver [PATRON_FACTORY_METHOD.md](./PATRON_FACTORY_METHOD.md))
-- **DTO Pattern**: Transferencia de datos entre capas
-- **Singleton Pattern**: Instancias únicas de repositorios (DependencyContainer)
+### 8. Caso de uso: Iniciar sesión
+| ![Prototipo de Iniciar sesión](images/IniciarSesion.png) |
+|:--:|
+| *Figura 18: Prototipo de Iniciar sesión* | 
 
-## 🔧 Tecnologías
+### 9. Caso de uso: Explorar eventos públicos
+| ![Prototipo de Explorar eventos públicos](images/ExplorarEventosPublicos.png) |
+|:--:|
+| *Figura 19: Prototipo de Explorar eventos públicos* | 
 
-- **Runtime**: Node.js v20.19.0
-- **Lenguaje**: TypeScript
-- **Framework Web**: Express 5
-- **ORM**: Sequelize 6
-- **Base de Datos**: PostgreSQL
-- **Validación**: (pendiente: Zod o Joi)
-- **Testing**: (pendiente: Jest)
-
-## 📝 Convenciones de Código
-
-### Nomenclatura
-- **Clases**: PascalCase (`UsuarioRepository`, `SendInvitacionUseCase`)
-- **Interfaces**: PascalCase con prefijo `I` (`IUsuarioRepository`)
-- **Métodos**: camelCase (`findById`, `execute`)
-- **Variables**: camelCase (`usuarioId`, `eventoActual`)
-- **Constantes**: UPPER_SNAKE_CASE (`LIMITE_PENDIENTES`)
-
-### Estructura de Archivos
-- Un archivo por clase/interfaz
-- Nombre del archivo = nombre de la clase
-- Agrupar por feature/dominio
-
-## 🐛 Troubleshooting
-
-### Error: "Database connection error"
-```bash
-# Verificar que PostgreSQL esté corriendo
-sudo service postgresql status
-
-# Verificar credenciales en .env
-cat .env
-```
-
-### Error: "Sequelize CLI not found"
-```bash
-# Instalar globalmente (opcional)
-npm install -g sequelize-cli
-
-# O usar npx
-npx sequelize-cli db:migrate
-```
-
-### Error: "Cannot find module '../DAO/models'"
-```bash
-# Asegúrate de que las rutas en .sequelizerc apunten a infrastructure/database
-cat .sequelizerc
-```
-
-### Resetear completamente la base de datos
-```bash
-npm run db:reset
-```
-
-## 🚧 Próximos Pasos
-
-- [ ] Implementar endpoint `POST /api/invitations/respond`
-- [ ] Agregar validación de requests con Zod
-- [ ] Implementar autenticación JWT
-- [ ] Agregar tests unitarios con Jest
-- [ ] Agregar tests de integración
-- [ ] Documentar API con Swagger/OpenAPI
-- [ ] Agregar logging con Winston
-- [ ] Implementar rate limiting
-- [ ] Agregar Docker y Docker Compose
-- [ ] CI/CD con GitHub Actions
-
-## 👥 Contribuir
-
-### Agregar Nueva Funcionalidad (Historia de Usuario)
-
-Para agregar una nueva funcionalidad siguiendo la arquitectura modular:
-
-#### 1. Crear el módulo
-```bash
-# Crear estructura del módulo en src/modules/
-src/modules/
-└── nombre-modulo/           # Ejemplo: "gestion-eventos", "reportes"
-    ├── dtos/                # DTOs específicos del módulo
-    ├── use-cases/           # Casos de uso del módulo
-    └── controllers/         # Controladores HTTP del módulo
-```
-
-#### 2. Implementar las capas
-
-**Domain** (si es necesario):
-- Agregar interfaces en `src/domain/interfaces/` (ej: `IReporteRepository.ts`)
-- Agregar value objects en `src/domain/value-objects/` (ej: `TipoReporte.ts`)
-
-**Infrastructure** (si es necesario):
-- Agregar modelos de Sequelize en `src/infrastructure/database/models/`
-- Agregar repositorios en `src/infrastructure/repositories/`
-- Agregar factories en `src/infrastructure/factories/` (si aplica patrón Factory)
-- Crear migraciones: `npx sequelize-cli migration:generate --name create-tabla`
-
-**Application** (dentro del módulo):
-- Crear DTOs en `src/modules/nombre-modulo/dtos/`
-- Crear casos de uso en `src/modules/nombre-modulo/use-cases/`
-
-**Presentation** (dentro del módulo):
-- Crear controladores en `src/modules/nombre-modulo/controllers/`
-- Registrar rutas en `src/index.ts`
-
-#### 3. Workflow de desarrollo
-
-1. Crear una rama feature: `git checkout -b feature/nombre-funcionalidad`
-2. Seguir la arquitectura en capas y modular
-3. Escribir tests para nuevos casos de uso
-4. Hacer commit: `git commit -m "feat: agregar nueva funcionalidad"`
-5. Push: `git push origin feature/nombre-funcionalidad`
-6. Crear Pull Request
-
-### Ejemplo: Módulo de Invitaciones
-
-```
-src/modules/invitaciones/
-├── dtos/
-│   ├── SearchUsuariosDto.ts
-│   └── SendInvitacionDto.ts
-├── use-cases/
-│   ├── SearchUsuariosUseCase.ts
-│   ├── SendInvitacionUseCase.ts
-│   ├── GetNoElegiblesUseCase.ts
-│   └── CountInvitacionesPendientesUseCase.ts
-└── controllers/
-    └── InvitacionController.ts
-```
-
-## 📄 Licencia
-
-ISC
+### 10 y 11. Caso de uso: Administrar perfil / Cerrar sesión
+| ![Prototipo de Administrar perfil / Cerrar sesión](images/AdministrarPerfilYCerrarSesion.png) |
+|:--:|
+| *Figura 20: Prototipo de Administrar perfil / Cerrar sesión* | 
