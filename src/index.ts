@@ -18,6 +18,9 @@ import { AttendedEventsController } from "./modules/eventos-asistidos/controller
 import { DeleteEventoController } from "./modules/eventos-eliminar/controllers/DeleteEventoController";
 import { AuthController } from "./modules/iniciar-sesion/controllers/AuthController";
 import { ProfileController } from "./modules/perfil/controllers/ProfileController";
+import { CompartirRecursoController } from "./modules/compartir-recursos/controllers/CompartirRecursoController";
+import { VisualizarRecursoController } from "./modules/visualizar-recursos/controllers/VisualizarRecursoController";
+import { EliminarRecursoController } from "./modules/eliminar-recursos/controllers/EliminarRecursoController";
 const db = require("./infrastructure/database/models");
 
 dotenv.config();
@@ -113,6 +116,15 @@ app.use(verNotificacionesAccionController.getPath(), verNotificacionesAccionCont
 const deleteEventoController = new DeleteEventoController();
 app.use(deleteEventoController.getPath(), deleteEventoController.getRouter());
 
+const compartirRecursoController = new CompartirRecursoController();
+app.use(compartirRecursoController.getPath(), compartirRecursoController.getRouter());
+
+const visualizarRecursoController = new VisualizarRecursoController();
+app.use(visualizarRecursoController.getPath(), visualizarRecursoController.getRouter());
+
+const eliminarRecursoController = new EliminarRecursoController();
+app.use(eliminarRecursoController.getPath(), eliminarRecursoController.getRouter());
+
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {
     try {
@@ -150,11 +162,3 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason, promise) => {
     console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });
-
-
-
-
-
-
-
-
