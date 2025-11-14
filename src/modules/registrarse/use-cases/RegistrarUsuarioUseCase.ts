@@ -44,9 +44,9 @@ export class RegistrarUsuarioUseCase {
     const usuarioExistente = await this.usuarioRepository.findByEmail(dto.correo);
 
     // Si el usuario existe y YA está activo, no permitir re-registro
-    if (usuarioExistente && usuarioExistente.isActive) {
-      throw new Error('El correo ya está registrado y activo');
-    }
+    if (usuarioExistente) {
+      throw new Error('El correo ya está registrado');
+    } 
 
     // 6. Generar token de activación
     const activationToken = Math.random().toString(36).substring(2, 15) + 
@@ -56,40 +56,25 @@ export class RegistrarUsuarioUseCase {
 
     let usuarioId: number;
 
-    // 7. Si el usuario existe pero NO está activo, regenerar token
-    if (usuarioExistente && !usuarioExistente.isActive) {
-      await this.usuarioRepository.update(usuarioExistente.usuario_id, {
-        clave: dto.clave,
-        activation_token: activationToken,
-        token_expires_at: tokenExpiresAt
-      });
+    // 7. Crear nuevo usuario
+    const usuario = await this.usuarioRepository.create({
+      correo: dto.correo,
+      clave: dto.clave,
+      isActive: false,
+      activation_token: activationToken,
+      token_expires_at: tokenExpiresAt
+    });
 
-      await this.clienteRepository.update(usuarioExistente.usuario_id, {
-        nombre: dto.nombre,
-        apellido: dto.apellido
-      });
+    await this.clienteRepository.create({
+      nombre: dto.nombre,
+      apellido: dto.apellido,
+      usuario_id: usuario.usuario_id
+    });
 
-      usuarioId = usuarioExistente.usuario_id;
-    } else {
-      // 8. Crear nuevo usuario
-      const usuario = await this.usuarioRepository.create({
-        correo: dto.correo,
-        clave: dto.clave,
-        isActive: false,
-        activation_token: activationToken,
-        token_expires_at: tokenExpiresAt
-      });
+    usuarioId = usuario.usuario_id;
+   
 
-      await this.clienteRepository.create({
-        nombre: dto.nombre,
-        apellido: dto.apellido,
-        usuario_id: usuario.usuario_id
-      });
-
-      usuarioId = usuario.usuario_id;
-    }
-
-    // 9. Enviar correo de activación (asíncrono, no bloquea la respuesta)
+    // 8. Enviar correo de activación (asíncrono, no bloquea la respuesta)
     this.emailService.sendActivationEmail(dto.correo, activationToken, dto.nombre)
       .then(() => {
         console.log('✅ Email de activación enviado exitosamente a:', dto.correo);
@@ -107,7 +92,9 @@ export class RegistrarUsuarioUseCase {
         correo: dto.correo,
         nombre: dto.nombre,
         apellido: dto.apellido,
-        isActive: false
+        isActive: false,
+        activation_token: activationToken,
+        token_expires_at: tokenExpiresAt
       }
     };
   }
