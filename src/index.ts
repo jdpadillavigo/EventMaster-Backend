@@ -15,6 +15,7 @@ import { CreateEventoController } from "./modules/eventos-crear/controllers/Crea
 import { PublicEventsController } from "./modules/eventos-publicos/controllers/PublicEventsController";
 import { ManagedEventsController } from "./modules/eventos-gestionados/controllers/ManagedEventsController";
 import { AttendedEventsController } from "./modules/eventos-asistidos/controllers/AttendedEventsController";
+import { DeleteEventoController } from "./modules/eventos-eliminar/controllers/DeleteEventoController";
 import { AuthController } from "./modules/iniciar-sesion/controllers/AuthController";
 import { ProfileController } from "./modules/perfil/controllers/ProfileController";
 const db = require("./infrastructure/database/models");
@@ -108,6 +109,9 @@ app.use(verInvitacionesPrivadasController.getPath(), verInvitacionesPrivadasCont
 
 const verNotificacionesAccionController = new VerNotificacionesAccionController();
 app.use(verNotificacionesAccionController.getPath(), verNotificacionesAccionController.getRouter());
+
+const deleteEventoController = new DeleteEventoController();
+app.use(deleteEventoController.getPath(), deleteEventoController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

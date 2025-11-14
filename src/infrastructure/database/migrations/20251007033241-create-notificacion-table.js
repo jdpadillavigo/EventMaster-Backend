@@ -19,7 +19,8 @@ module.exports = {
         references: {
           model: 'Evento',
           key: 'evento_id'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

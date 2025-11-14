@@ -10,7 +10,8 @@ module.exports = {
         references: {
           model: 'Notificacion',
           key: 'notificacion_id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       fechaLimite: {
         type: Sequelize.DATE,

@@ -10,7 +10,8 @@ module.exports = {
         references: {
           model: 'Evento',
           key: 'evento_id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       participante_id: {
         type: Sequelize.INTEGER,
@@ -18,7 +19,8 @@ module.exports = {
         references: {
           model: 'Participante',
           key: 'participante_id'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

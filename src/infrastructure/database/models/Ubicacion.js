@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       // Una ubicación pertenece a un evento
       Ubicacion.belongsTo(models.Evento, {
         foreignKey: 'evento_id',
-        as: 'evento'
+        as: 'evento',
+        onDelete: 'CASCADE'
       });
     }
   }

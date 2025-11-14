@@ -41,10 +41,14 @@ export class ParticipantesObserver implements Observer {
                 mensaje: 'Se ha desvinculado del evento.',
                 soloParaOrganizadores: true,
             },
+            EVENTO_CANCELADO: {
+                mensaje: 'El evento ha sido cancelado.',
+                soloParaOrganizadores: false,
+            },
         };
 
         const estrategia = estrategias[eventType];
-        if (!estrategia) return; // No hacemos nada si no hay estrategia definida
+        if (!estrategia) return; 
 
         const { mensaje, soloParaOrganizadores } = estrategia;
 
@@ -64,7 +68,7 @@ export class ParticipantesObserver implements Observer {
         for (const destinatario of destinatarios) {
             await this.notificacionUsuarioRepository.create({
                 notificacion_accion_id: nuevaNotificacion.notificacion_id,
-                usuario_id: destinatario.usuario_id,
+                usuario_id: destinatario.participante.usuario.usuario_id,
             });
         }
 

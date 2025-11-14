@@ -98,18 +98,33 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
     }
   }
 
-  async countByEvento(eventoId: number): Promise<number> {
+async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
     try {
+      const includeClause: any[] = [];
+
+      // Si se especifican rolIds, hacer JOIN con Participante
+      if (rolId !== undefined && rolId.length > 0) {
+        includeClause.push({
+          model: db.Participante,
+          as: 'participante',
+          where: {
+            rol_id: { [Op.in]: rolId }
+          },
+          attributes: [] 
+        });
+      }
+
       const count = await db.EventoParticipante.count({
-        where: { evento_id: eventoId }
+        where: {evento_id: eventoId},
+        include: includeClause
       });
       
       return count;
     } catch (error) {
       console.error('Error en countByEvento:', error);
       throw error;
-    }
-  }
+    }
+  }
 
   async countByParticipante(participanteId: number): Promise<number> {
     try {
@@ -163,15 +178,16 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
     }
   }
 
-  async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]> {
+async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]> {
     try {
       const links = await db.EventoParticipante.findAll({
-        // si no doy rolId, no lo uses
-        where: rolIds? { evento_id: eventoId, rol_id: { [Op.in]: rolIds } } : { evento_id: eventoId },
+        where: { evento_id: eventoId },
         include: [{
           model: db.Participante,
           as: "participante",
           required: true,
+          // Si se especifican rolIds, filtrar por rol_id en Participante
+          where: rolIds ? { rol_id: { [Op.in]: rolIds } } : undefined,
           include: [{
             model: db.Usuario,
             as: "usuario",
@@ -191,6 +207,17 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
       return links;
     } catch (error) {
       console.error('Error en findParticipantesByEventoAndSomeRoles:', error);
+      throw error;
+    }
+  }
+
+  async deleteByEvento(eventoId: number): Promise<void> {
+    try {
+      await db.EventoParticipante.destroy({
+        where: { evento_id: eventoId }
+      });
+    } catch (error) {
+      console.error('Error en deleteByEvento:', error);
       throw error;
     }
   }
