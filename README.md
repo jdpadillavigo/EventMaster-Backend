@@ -139,10 +139,10 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 2. Caso de uso: Consultar notificaciones
-Visualizar notificaciones: GET /api/notifications-action
-Visualizar invitaciones privadas: GET /api/private-invitations
-Confirmar asistencia privada: POST /api/invitaciones/respond
-Invitar usuarios: POST /api/send-invitations/send
+- **Visualizar notificaciones:** `GET /api/notifications-action`  
+- **Visualizar invitaciones privadas:** `GET /api/private-invitations`  
+- **Confirmar asistencia privada:** `POST /api/invitaciones/respond`  
+- **Invitar usuarios:** `POST /api/send-invitations/send`
 
 | ![Prototipo de Consultar notificaciones](images/ConsultarNotificaciones3.png) |
 |:--:|
