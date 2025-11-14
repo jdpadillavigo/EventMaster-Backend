@@ -165,6 +165,11 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 | *Figura 12: Prototipo de Consultar eventos creados - Parte 2* |    
 
 ### 4 y 5. Caso de uso: Acceder al detalle del evento / Administrar un evento 
+- **Ver detalle de evento:** `GET /api/eventos/:evento_id`
+- **Visualizar recursos:** `GET /api/visualizar-recursos/evento/:evento_id`
+- **Compartir recurso:** `POST /api/compartir-recursos`
+- **Eliminar recurso:** `DELETE /api/eliminar-recursos`
+
 | ![Prototipo de Acceder al detalle del evento - Parte 1](images/DetalleYAdministrar1.png) |
 |:--:|
 | *Figura 13: Prototipo de Acceder al detalle del evento / Administrar un evento - Parte 1* | 
