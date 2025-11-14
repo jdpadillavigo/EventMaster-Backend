@@ -184,11 +184,15 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 
 
 ### 7. Caso de uso: Registrarse
+- **Registro de Usuario:** `POST /api/auth/register`
+   
 | ![Prototipo](images/Registrarse.png) |  
 |:--:|
 | *Figura 17: Prototipo de Registrarse* | 
 
 ### 8. Caso de uso: Iniciar sesión
+- **Login:** `POST /api/auth/login`
+  
 | ![Prototipo de Iniciar sesión](images/IniciarSesion.png) |
 |:--:|
 | *Figura 18: Prototipo de Iniciar sesión* | 
@@ -199,6 +203,9 @@ A continuación, se muestran los endpoints para cada caso de uso del Sistema de 
 | *Figura 19: Prototipo de Explorar eventos públicos* | 
 
 ### 10 y 11. Caso de uso: Administrar perfil / Cerrar sesión
+- **Ver perfil (protegido):** `GET /api/profile`
+- **Editar perfil (protegido):** `PUT /api/profile`
+  
 | ![Prototipo de Administrar perfil / Cerrar sesión](images/AdministrarPerfilYCerrarSesion.png) |
 |:--:|
 | *Figura 20: Prototipo de Administrar perfil / Cerrar sesión* | 
