@@ -3,7 +3,7 @@ import { IEventoRepository } from '../../domain/interfaces/IEventoRepository';
 const db = require('../database/models');
 
 export class EventoRepository implements IEventoRepository {
-  
+
   async findById(id: number): Promise<any | null> {
     try {
       const evento = await db.Evento.findByPk(id, {
@@ -37,7 +37,7 @@ export class EventoRepository implements IEventoRepository {
     try {
       const evento = await db.Evento.findByPk(id);
       if (!evento) return null;
-      
+
       await evento.update(data);
       return evento;
     } catch (error) {
@@ -62,18 +62,6 @@ export class EventoRepository implements IEventoRepository {
       return eventos;
     } catch (error) {
       console.error('Error en findAll:', error);
-      throw error;
-    }
-  }
-
-  async incrementParticipantes(eventoId: number): Promise<void> {
-    try {
-      await db.Evento.increment('nroParticipantes', {
-        by: 1,
-        where: { evento_id: eventoId }
-      });
-    } catch (error) {
-      console.error('Error en incrementParticipantes:', error);
       throw error;
     }
   }
@@ -208,8 +196,7 @@ export class EventoRepository implements IEventoRepository {
           ['titulo', 'name'],
           ['fechaInicio', 'dateStart'],
           ['fechaFin', 'dateEnd'],
-          ['imagen', 'imageUrl'],
-          ['aforo', 'capacity'],
+          ['imagen', 'imageUrl']
         ],
         where: {
           fechaFin: { [db.Sequelize.Op.gt]: cutoff },

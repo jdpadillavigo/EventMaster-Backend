@@ -16,7 +16,7 @@ export class SendInvitacionUseCase {
     private eventoParticipanteRepository: IEventoParticipanteRepository,
     private invitacionUsuarioRepository: IInvitacionUsuarioRepository,
     private estadoInvitacionRepository: IEstadoInvitacionRepository
-  ) {}
+  ) { }
 
   async execute(dto: SendInvitacionDto): Promise<SendInvitacionResultDto> {
     // Validar datos requeridos
@@ -56,23 +56,23 @@ export class SendInvitacionUseCase {
     for (const usuarioData of dto.usuarios) {
       const usuario = await this.usuarioRepository.findById(usuarioData.usuario_id);
       if (!usuario) {
-        resultados.push({ 
-          usuario_id: usuarioData.usuario_id, 
-          status: 'User not found' 
+        resultados.push({
+          usuario_id: usuarioData.usuario_id,
+          status: 'User not found'
         });
         continue;
       }
 
-      // Validar si ya está en el evento como coorganizador
+      // Validar si ya está en el evento 
       const yaEnEvento = await this.eventoParticipanteRepository.findByEventoAndUsuario(
-        dto.evento_id, 
+        dto.evento_id,
         usuarioData.usuario_id
       );
 
       if (yaEnEvento) {
-        resultados.push({ 
-          usuario_id: usuarioData.usuario_id, 
-          status: 'Already in event' 
+        resultados.push({
+          usuario_id: usuarioData.usuario_id,
+          status: 'Already in event'
         });
         continue;
       }
@@ -85,9 +85,9 @@ export class SendInvitacionUseCase {
       );
 
       if (invitacionExistente) {
-        resultados.push({ 
-          usuario_id: usuarioData.usuario_id, 
-          status: 'Already invited' 
+        resultados.push({
+          usuario_id: usuarioData.usuario_id,
+          status: 'Already invited'
         });
         continue;
       }

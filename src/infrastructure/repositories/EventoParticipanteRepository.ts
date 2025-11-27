@@ -4,7 +4,7 @@ const db = require('../database/models');
 const { Op } = require('sequelize');
 
 export class EventoParticipanteRepository implements IEventoParticipanteRepository {
-  
+
   async findByEventoAndUsuario(eventoId: number, usuarioId: number): Promise<any | null> {
     try {
       const link = await db.EventoParticipante.findOne({
@@ -16,8 +16,8 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
         }],
         where: { evento_id: eventoId }
       });
-      
-      return link 
+
+      return link
     } catch (error) {
       console.error('Error en findByEventoAndUsuario:', error);
       throw error;
@@ -27,7 +27,7 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
   async findParticipantesByEventoAndRol(eventoId: number): Promise<any[]> {
     try {
       const links = await db.EventoParticipante.findAll({
-        where: { evento_id: eventoId }, 
+        where: { evento_id: eventoId },
         include: [
           {
             model: db.Participante,
@@ -38,14 +38,14 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
                 model: db.Usuario,
                 as: 'usuario',
                 required: true,
-                include: [{ 
-                  model: db.Cliente, 
-                  as: 'cliente' 
+                include: [{
+                  model: db.Cliente,
+                  as: 'cliente'
                 }]
               },
-              { 
-                model: db.Rol, 
-                as: 'rol' 
+              {
+                model: db.Rol,
+                as: 'rol'
               }
             ]
           }
@@ -98,7 +98,7 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
     }
   }
 
-async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
+  async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
     try {
       const includeClause: any[] = [];
 
@@ -110,28 +110,28 @@ async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
           where: {
             rol_id: { [Op.in]: rolId }
           },
-          attributes: [] 
+          attributes: []
         });
       }
 
       const count = await db.EventoParticipante.count({
-        where: {evento_id: eventoId},
+        where: { evento_id: eventoId },
         include: includeClause
       });
-      
+
       return count;
     } catch (error) {
       console.error('Error en countByEvento:', error);
       throw error;
-    }
-  }
+    }
+  }
 
   async countByParticipante(participanteId: number): Promise<number> {
     try {
       const count = await db.EventoParticipante.count({
         where: { participante_id: participanteId }
       });
-      
+
       return count;
     } catch (error) {
       console.error('Error en countByParticipante:', error);
@@ -144,7 +144,7 @@ async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
       const link = await db.EventoParticipante.findOne({
         where: { evento_id: eventoId, participante_id: participanteId }
       });
-      
+
       return link;
     } catch (error) {
       console.error('Error en findByEventoAndParticipante:', error);
@@ -178,7 +178,7 @@ async countByEvento(eventoId: number, rolId?: number[]): Promise<number> {
     }
   }
 
-async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]> {
+  async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]> {
     try {
       const links = await db.EventoParticipante.findAll({
         where: { evento_id: eventoId },
@@ -194,7 +194,7 @@ async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?
             attributes: ["usuario_id", "correo"],
             required: true,
             // si se pasa usuarioExcluidoId, no lo uses
-            where: usuarioExcluidoId? { usuario_id: { [Op.ne]: usuarioExcluidoId } } : undefined,
+            where: usuarioExcluidoId ? { usuario_id: { [Op.ne]: usuarioExcluidoId } } : undefined,
             include: [{
               model: db.Cliente,
               as: "cliente",
@@ -208,8 +208,8 @@ async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?
     } catch (error) {
       console.error('Error en findParticipantesByEventoAndSomeRoles:', error);
       throw error;
-    }
-  }
+    }
+  }
 
   async deleteByEvento(eventoId: number): Promise<void> {
     try {
@@ -229,6 +229,37 @@ async findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?
       });
     } catch (error) {
       console.error('Error en deleteByEventoAndParticipante:', error);
+      throw error;
+    }
+  }
+
+  async countByUsuarioEventoActivo(usuarioId: number): Promise<number> {
+    try {
+      const count = await db.EventoParticipante.count({
+        include: [
+          {
+            model: db.Participante,
+            as: 'participante',
+            required: true,
+            where: {
+              usuario_id: usuarioId
+            }
+          },
+          {
+            model: db.Evento,
+            as: 'evento',
+            required: true,
+            where: {
+              fechaFin: {
+                [db.Sequelize.Op.gt]: new Date()
+              }
+            }
+          }
+        ]
+      });
+      return count;
+    } catch (error) {
+      console.error('Error en countByParticipanteEventoActivo:', error);
       throw error;
     }
   }
