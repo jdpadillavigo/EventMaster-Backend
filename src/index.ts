@@ -18,6 +18,7 @@ import { AttendedEventsController } from "./modules/eventos-asistidos/controller
 import { DesvincularEventoController } from "./modules/desvincular-evento/controllers/DesvincularEventoController";
 import { DeleteEventoController } from "./modules/eventos-eliminar/controllers/DeleteEventoController";
 import { AuthController } from "./modules/iniciar-sesion/controllers/AuthController";
+import { GoogleAuthController } from "./modules/iniciar-sesion/controllers/GoogleAuthController";
 import { ProfileController } from "./modules/perfil/controllers/ProfileController";
 import { CompartirRecursoController } from "./modules/compartir-recursos/controllers/CompartirRecursoController";
 import { VisualizarRecursoController } from "./modules/visualizar-recursos/controllers/VisualizarRecursoController";
@@ -41,11 +42,11 @@ if (process.env.FRONTEND_URL) {
 
 console.log('🔐 CORS configurado para los siguientes orígenes:', allowedOrigins);
 
-app.use(cors({ 
+app.use(cors({
     origin: (origin, callback) => {
         // Permitir requests sin origin (como Postman, curl, etc.)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -62,7 +63,7 @@ app.use(cors({
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
-    extended : true
+    extended: true
 }))
 app.use(express.static("assets")) // Carpeta archivos estaticos
 
@@ -77,6 +78,9 @@ app.use(activarCuentaController.getPath(), activarCuentaController.getRouter())
 
 const authController = new AuthController();
 app.use(authController.getPath(), authController.getRouter());
+
+const googleAuthController = new GoogleAuthController();
+app.use(googleAuthController.getPath(), googleAuthController.getRouter());
 
 const invitacionController = new InvitacionController();
 app.use(invitacionController.getPath(), invitacionController.getRouter())
@@ -134,15 +138,15 @@ const startServer = async () => {
         console.log('🔄 Iniciando conexión a la base de datos...');
         console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
         console.log('🔧 DATABASE_URL presente:', !!process.env.DATABASE_URL);
-        
+
         // Autenticar conexión
         await db.sequelize.authenticate();
         console.log('✅ Conexión a la base de datos establecida correctamente');
-        
+
         // Sincronizar modelos (crear tablas si no existen)
         await db.sequelize.sync({ alter: false });
         console.log('✅ Modelos sincronizados con la base de datos');
-        
+
         // Iniciar servidor
         app.listen(port, () => {
             console.log(`✅ [Server]: Servidor ejecutandose en puerto ${port}`)

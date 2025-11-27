@@ -30,6 +30,7 @@ import { ConfirmPublicAttendanceUseCase } from '../../modules/confirmar-publico/
 import { RegistrarUsuarioUseCase } from '../../modules/registrarse/use-cases/RegistrarUsuarioUseCase';
 import { ActivarCuentaUseCase } from '../../modules/activar-cuenta/use-cases/ActivarCuentaUseCase';
 import { LoginUseCase } from '../../modules/iniciar-sesion/use-cases/LoginUseCase';
+import { GoogleLoginUseCase } from '../../modules/iniciar-sesion/use-cases/GoogleLoginUseCase';
 import { CreateEventoUseCase } from '../../modules/eventos-crear/use-cases/CreateEventoUseCase';
 import { ListPublicEventsUseCase } from '../../modules/eventos-publicos/use-cases/ListPublicEventsUseCase';
 import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-cases/ListManagedEventsUseCase';
@@ -111,6 +112,7 @@ export class DependencyContainer {
 
   // Use Cases - Auth
   private static loginUseCase: LoginUseCase;
+  private static googleLoginUseCase: GoogleLoginUseCase;
 
   // Use Case - Crear Evento
   private static createEventoUseCase: CreateEventoUseCase;
@@ -135,18 +137,18 @@ export class DependencyContainer {
   private static compartirRecursoUseCase: CompartirRecursoUseCase;
   private static getRecursosByEventoUseCase: GetRecursosByEventoUseCase;
   private static eliminarRecursoUseCase: EliminarRecursoUseCase;
-  
+
   // Use Case - Desvincular Evento
   private static unjoinEventUseCase: UnjoinEventUseCase;
 
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
   private static participantesObserver: ParticipantesObserver;
-  
+
   // Factory
   private static invitacionFabrica: InvitacionFabrica;
   private static accionFabrica: AccionFabrica;
-  
+
   // Middleware
   private static verifyOrganizerGlobal: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
   private static verifyOrganizerInEvent: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
@@ -401,6 +403,16 @@ export class DependencyContainer {
     return this.loginUseCase;
   }
 
+  static getGoogleLoginUseCase(): GoogleLoginUseCase {
+    if (!this.googleLoginUseCase) {
+      this.googleLoginUseCase = new GoogleLoginUseCase(
+        this.getUsuarioRepository(),
+        this.getClienteRepository()
+      );
+    }
+    return this.googleLoginUseCase;
+  }
+
   static getCreateEventoUseCase(): CreateEventoUseCase {
     if (!this.createEventoUseCase) {
       this.createEventoUseCase = new CreateEventoUseCase(
@@ -601,7 +613,7 @@ export class DependencyContainer {
     }
     return this.verifyOrganizerInEvent;
   }
-  
+
   // Getter para el middleware de verificación de asistente en evento
   static getVerifyAttendeeInEvent() {
     if (!this.verifyAttendeeInEvent) {
