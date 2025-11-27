@@ -10,13 +10,13 @@ module.exports = (sequelize, DataTypes) => {
         as: 'usuario',
         onDelete: 'CASCADE'
       });
-      
+
       // Una invitación de usuario pertenece a un estado
       InvitacionUsuario.belongsTo(models.EstadoInvitacion, {
         foreignKey: 'estado_invitacion_id',
         as: 'estado'
       });
-      
+
       // Una invitación de usuario pertenece a una invitación
       InvitacionUsuario.belongsTo(models.Invitacion, {
         foreignKey: 'invitacion_id',
@@ -26,17 +26,12 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  
+
   InvitacionUsuario.init({
     invitacion_usuario_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
-    },
-    esParaCoorganizar: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     },
     estado_invitacion_id: {
       type: DataTypes.INTEGER,
@@ -68,6 +63,6 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'InvitacionUsuario',
     timestamps: false
   });
-  
+
   return InvitacionUsuario;
 };

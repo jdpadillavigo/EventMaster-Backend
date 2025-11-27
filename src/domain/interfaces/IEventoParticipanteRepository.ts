@@ -12,4 +12,5 @@ export interface IEventoParticipanteRepository {
   findAllWithFilters(eventoId: number, rolIds?: number[], usuarioExcluidoId?: number): Promise<any[]>;
   deleteByEvento(eventoId: number): Promise<void>;
   deleteByEventoAndParticipante(eventoId: number, participanteId: number): Promise<void>;
+  countByUsuarioEventoActivo(usuarioId: number): Promise<number>;
 }

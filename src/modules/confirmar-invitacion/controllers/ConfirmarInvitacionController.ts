@@ -11,7 +11,7 @@ export class ConfirmarInvitacionController {
 
   constructor() {
     this.router = express.Router();
-    this.router.use(authMiddleware);    
+    this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 

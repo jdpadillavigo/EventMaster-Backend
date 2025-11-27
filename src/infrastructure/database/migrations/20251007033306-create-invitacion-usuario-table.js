@@ -2,17 +2,12 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('InvitacionUsuario', {
       invitacion_usuario_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
-      },
-      esParaCoorganizar: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
       },
       estado_invitacion_id: {
         type: Sequelize.INTEGER,
@@ -43,7 +38,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('InvitacionUsuario');
   }
 };
