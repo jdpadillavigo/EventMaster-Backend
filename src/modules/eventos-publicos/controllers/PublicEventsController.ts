@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express'
 import { DependencyContainer } from '../../../shared/utils/DependencyContainer'
+import { authMiddleware } from '../../../shared/middlewares/authMiddleware'
 
 export class PublicEventsController {
   private router: Router
@@ -9,6 +10,8 @@ export class PublicEventsController {
 
   constructor() {
     this.router = express.Router()
+    // Aplicar middleware de autenticación
+    this.router.use(authMiddleware)
     this.initializeRoutes()
   }
 
@@ -18,7 +21,8 @@ export class PublicEventsController {
 
   private async list(req: Request, res: Response): Promise<void> {
     try {
-      const usuarioId = req.query.usuarioId ? Number(req.query.usuarioId) : undefined
+      // Obtener el ID del usuario autenticado desde el token JWT
+      const usuarioId = req.user?.id
       const result = await this.listPublicEventsUseCase.execute(usuarioId)
       res.json(result)
     } catch (err) {

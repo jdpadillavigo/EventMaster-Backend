@@ -107,30 +107,49 @@ export class EventoRepository implements IEventoRepository {
     }
   }
 
-  async findPublicEvents(excludeUsuarioId?: number): Promise<any[]> {
+  async findPublicEvents(excludeUsuarioId: number): Promise<any[]> {
     try {
       const ID_ESTADO_PROGRAMADO = 1;
       const ID_PRIVACIDAD_PUBLICO = 1;
 
-      // Si se proporciona excludeUsuarioId, obtenemos los IDs de eventos donde es organizador
+      // Si se proporciona excludeUsuarioId, obtenemos los IDs de eventos donde participa (en cualquier rol)
       let eventosExcluidos: number[] = [];
+
       if (excludeUsuarioId) {
-        const eventosOrganizador = await db.Evento.findAll({
-          attributes: ['evento_id'],
-          include: [
-            {
-              model: db.Participante,
-              as: 'participantes',
-              required: true,
-              through: { attributes: [] },
-              include: [
-                { model: db.Usuario, as: 'usuario', required: true, where: { usuario_id: excludeUsuarioId } },
-                { model: db.Rol, as: 'rol', required: true, where: { nombre: 'Organizador' } },
-              ],
-            },
-          ],
-        });
-        eventosExcluidos = eventosOrganizador.map((e: any) => e.evento_id);
+        console.log('[EventoRepository] Filtrando eventos para usuario ID:', excludeUsuarioId);
+
+        try {
+          // Paso 1: Obtener todos los IDs de participante asociados al usuario
+          // Esto nos da todas las "identidades" del usuario (como organizador, asistente, etc.)
+          const participantes = await db.Participante.findAll({
+            where: { usuario_id: excludeUsuarioId },
+            attributes: ['participante_id'],
+            raw: true
+          });
+
+          const participanteIds = participantes.map((p: any) => p.participante_id);
+          console.log('[EventoRepository] IDs de participante del usuario:', participanteIds);
+
+          if (participanteIds.length > 0) {
+            // Paso 2: Obtener todos los eventos asociados a esos participantes
+            // Consultamos directamente la tabla intermedia EventoParticipante
+            const eventosParticipando = await db.EventoParticipante.findAll({
+              where: { participante_id: { [db.Sequelize.Op.in]: participanteIds } },
+              attributes: ['evento_id'],
+              raw: true
+            });
+
+            eventosExcluidos = eventosParticipando.map((e: any) => e.evento_id);
+            // Eliminamos duplicados por si acaso
+            eventosExcluidos = [...new Set(eventosExcluidos)];
+
+            console.log('[EventoRepository] Eventos a excluir (IDs):', eventosExcluidos);
+          }
+        } catch (err) {
+          console.error('[EventoRepository] Error al obtener eventos excluidos:', err);
+        }
+      } else {
+        console.log('[EventoRepository] No se proporcionó excludeUsuarioId, mostrando todos los eventos públicos');
       }
 
       const whereClause: any = {
@@ -139,7 +158,6 @@ export class EventoRepository implements IEventoRepository {
         fechaFin: { [db.Sequelize.Op.gte]: new Date() },
       };
 
-      // Excluir eventos donde el usuario es organizador
       if (eventosExcluidos.length > 0) {
         whereClause.evento_id = { [db.Sequelize.Op.notIn]: eventosExcluidos };
       }
@@ -149,7 +167,6 @@ export class EventoRepository implements IEventoRepository {
           ['evento_id', 'id'],
           ['titulo', 'name'],
           ['fechaInicio', 'dateStart'],
-          ['fechaFin', 'dateEnd'],
           ['imagen', 'imageUrl'],
           [
             db.Sequelize.fn(
@@ -223,8 +240,6 @@ export class EventoRepository implements IEventoRepository {
     }
   }
 
-  // Arreglar: Esta mal que filtre solo rol Asistente 
-  // Esta linea esta mal: { model: db.Rol, as: 'rol', required: true, where: { nombre: { [db.Sequelize.Op.ne]: 'Organizador' } } },
   async findAttendedEventsByUsuario(usuarioId: number): Promise<any[]> {
     try {
       const eventos = await db.Evento.findAll({
