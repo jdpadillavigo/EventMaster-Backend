@@ -35,6 +35,18 @@ module.exports = {
         latitud: -12.0764,
         longitud: -77.0728,
         evento_id: eventoIds[3]
+      },
+      {
+        direccion: 'Av de los Precursores 125-127, San Miguel 15088',
+        latitud: -12.0775,
+        longitud: -77.0930,
+        evento_id: eventoIds[4],
+      },
+      {
+        direccion: 'Costa Verde, Miraflores',
+        latitud: -12.1260,
+        longitud: -77.0300,
+        evento_id: eventoIds[5],
       }
     ], {});
   },

@@ -47,6 +47,28 @@ module.exports = {
         aforo: 100,
         estadoEvento: 1, // Programado
         privacidad: 1 // Público
+      },
+      {
+        titulo: 'Baile de los Brainrots',
+        descripcion: '¡Por primera vez en Perú ...!',
+        fechaInicio: new Date('2026-09-11T20:00:00Z'),
+        fechaFin: new Date('2026-09-11T23:00:00Z'),
+        imagen: 'assets/images/event_brainrots.jpg',
+        nroParticipantes: 0,
+        aforo: 100,
+        estadoEvento: 1, // Programado
+        privacidad: 1,   // Público
+      },
+      {
+        titulo: 'Festival de Música Electrónica',
+        descripcion: 'El mejor festival de música electrónica del año.',
+        fechaInicio: new Date('2025-10-15T18:00:00Z'),
+        fechaFin: new Date('2025-10-16T06:00:00Z'),
+        imagen: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1400&auto=format&fit=crop',
+        nroParticipantes: 0,
+        aforo: 100,
+        estadoEvento: 1, // Programado
+        privacidad: 1,   // Público
       }
     ], {});
   },
