@@ -159,22 +159,6 @@ export class EmailService {
                   ✅ Tu cuenta está lista para usar
                 </p>
               </div>
-              
-              <div style="text-align: center; margin: 35px 0;">
-                <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/login" 
-                   style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
-                          color: white; 
-                          padding: 16px 32px; 
-                          text-decoration: none; 
-                          border-radius: 50px; 
-                          font-weight: bold; 
-                          font-size: 16px;
-                          display: inline-block;
-                          box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-                          transition: transform 0.2s;">
-                  Iniciar Sesión
-                </a>
-              </div>
             </div>
             
             <div style="background: #f8f9fa; text-align: center; padding: 20px; color: #999; font-size: 12px; border-top: 1px solid #e0e0e0;">
