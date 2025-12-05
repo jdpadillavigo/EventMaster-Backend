@@ -58,7 +58,8 @@ export class EventoParticipanteRepository implements IEventoParticipanteReposito
         correo: l.participante.usuario.correo,
         nombre: l.participante.usuario.cliente?.nombre || '',
         apellido: l.participante.usuario.cliente?.apellido || '',
-        rol: l.participante.rol?.nombre || ''
+        rol: l.participante.rol?.nombre || '',
+        foto_perfil: l.participante.usuario.cliente?.foto_perfil || null,
       }));
 
       return participantes;

@@ -11,4 +11,5 @@ export interface ParticipanteResultDto {
   nombre: string;
   apellido: string;
   rol: string;
+  foto_perfil: string | null;
 }

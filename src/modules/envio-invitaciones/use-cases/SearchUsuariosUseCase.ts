@@ -21,7 +21,8 @@ export class SearchUsuariosUseCase {
       usuario_id: u.usuario_id,
       correo: u.correo,
       nombre: u.cliente?.nombre,
-      apellido: u.cliente?.apellido
+      apellido: u.cliente?.apellido,
+      foto_perfil: u.cliente?.foto_perfil ?? null,
     }));
   }
 }

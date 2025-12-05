@@ -7,4 +7,5 @@ export interface UsuarioSearchResultDto {
   correo: string;
   nombre?: string;
   apellido?: string;
+  foto_perfil?: string | null;
 }
