@@ -9,25 +9,25 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'evento_id',
         as: 'notificaciones'
       });
-      
+
       // Un evento tiene una ubicación
       Evento.hasOne(models.Ubicacion, {
         foreignKey: 'evento_id',
         as: 'ubicacion'
       });
-      
+
       // Un evento pertenece a un estado de evento
       Evento.belongsTo(models.EstadoEvento, {
         foreignKey: 'estadoEvento',
         as: 'estado'
       });
-      
+
       // Un evento pertenece a una privacidad
       Evento.belongsTo(models.Privacidad, {
         foreignKey: 'privacidad',
         as: 'privacidadTipo'
       });
-      
+
       // Un evento puede tener muchos participantes (a través de EventoParticipante)
       Evento.belongsToMany(models.Participante, {
         through: models.EventoParticipante,
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  
+
   Evento.init({
     evento_id: {
       type: DataTypes.INTEGER,
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     imagen: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.TEXT,
       allowNull: true
     },
     nroParticipantes: {
@@ -95,6 +95,6 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'Evento',
     timestamps: false
   });
-  
+
   return Evento;
 };

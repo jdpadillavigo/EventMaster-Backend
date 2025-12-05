@@ -25,6 +25,8 @@ import { VisualizarRecursoController } from "./modules/visualizar-recursos/contr
 import { EliminarRecursoController } from "./modules/eliminar-recursos/controllers/EliminarRecursoController";
 import { EliminarAsistenteController } from "./modules/eliminar-asistente/controllers/EliminarAsistenteController";
 import { VerCoordenadasController } from "./modules/evento-coordenada/controllers/VerCoordenadasController";
+import { EditarEventoController } from "./modules/eventos-editar/controllers/EditarEventoController";
+
 const db = require("./infrastructure/database/models");
 
 dotenv.config();
@@ -63,8 +65,9 @@ app.use(cors({
     maxAge: 86400 // 24 horas
 }));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({
+    limit: '50mb',
     extended: true
 }))
 app.use(express.static("assets")) // Carpeta archivos estaticos
@@ -139,6 +142,9 @@ app.use(eliminarAsistenteController.getPath(), eliminarAsistenteController.getRo
 
 const verCoordenadasController = new VerCoordenadasController();
 app.use(verCoordenadasController.getPath(), verCoordenadasController.getRouter());
+
+const editarEventoController = new EditarEventoController();
+app.use(editarEventoController.getPath(), editarEventoController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

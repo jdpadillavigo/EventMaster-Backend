@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import { DependencyContainer } from "../../../shared/utils/DependencyContainer";
+import { authMiddleware } from "../../../shared/middlewares/authMiddleware";
 
 export class VerParticipantesController {
   private router: Router;
@@ -8,14 +9,18 @@ export class VerParticipantesController {
   // Use Cases (inyectados desde el contenedor)
   private getParticipantesByEventoUseCase = DependencyContainer.getGetParticipantesByEventoUseCase();
 
+  // Middleware
+  private verifyOrganizerInEvent = DependencyContainer.getVerifyOrganizerInEvent();
+
   constructor() {
     this.router = express.Router();
+    this.router.use(authMiddleware)
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
     // Endpoint para obtener participantes confirmados de un evento
-    this.router.get("/eventos/:evento_id/participantes", this.getParticipantes.bind(this));
+    this.router.get("/eventos/:evento_id/participantes", this.verifyOrganizerInEvent, this.getParticipantes.bind(this));
   }
 
   // Handler: Obtener participantes

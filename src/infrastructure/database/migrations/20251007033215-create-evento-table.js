@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Evento', {
       evento_id: {
         type: Sequelize.INTEGER,
@@ -26,7 +26,7 @@ module.exports = {
         allowNull: false
       },
       imagen: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.TEXT,
         allowNull: true
       },
       nroParticipantes: {
@@ -58,7 +58,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Evento');
   }
 };

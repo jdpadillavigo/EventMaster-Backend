@@ -39,6 +39,7 @@ import { DeleteEventoUseCase } from '../../modules/eventos-eliminar/use-cases/De
 import { UnjoinEventUseCase } from '../../modules/desvincular-evento/use-cases/UnjoinEventUseCase';
 import { EliminarAsistenteUseCase } from '../../modules/eliminar-asistente/use-cases/EliminarAsistenteUseCase';
 import { GetCoordenadasUseCase } from '../../modules/evento-coordenada/use-cases/GetCoordenadasUseCase';
+import { EditarEventoUseCase } from '../../modules/eventos-editar/use-cases/EditarEventoUseCase';
 
 // Use Cases - Recursos
 import { CompartirRecursoUseCase } from '../../modules/compartir-recursos/use-cases/CompartirRecursoUseCase';
@@ -148,6 +149,9 @@ export class DependencyContainer {
 
   // Use Case - Get Coordenadas
   private static getCoordenadasUseCase: GetCoordenadasUseCase;
+
+  // Use Case - Editar Evento
+  private static editarEventoUseCase: EditarEventoUseCase;
 
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
@@ -490,6 +494,17 @@ export class DependencyContainer {
       );
     }
     return this.getCoordenadasUseCase;
+  }
+
+  static getEditarEventoUseCase(): EditarEventoUseCase {
+    if (!this.editarEventoUseCase) {
+      this.editarEventoUseCase = new EditarEventoUseCase(
+        this.getEventoRepository(),
+        this.getUbicacionRepository(),
+        this.getNotificationManager()
+      );
+    }
+    return this.editarEventoUseCase;
   }
 
   // Getter para el middleware de verificación de organizador/coorganizador global
