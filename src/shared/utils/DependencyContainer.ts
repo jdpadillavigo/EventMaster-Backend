@@ -542,7 +542,8 @@ export class DependencyContainer {
       this.compartirRecursoUseCase = new CompartirRecursoUseCase(
         this.getRecursoRepository(),
         this.getTipoRecursoRepository(),
-        this.getEventoRepository()
+        this.getEventoRepository(),
+        this.getNotificationManager()
       );
     }
     return this.compartirRecursoUseCase;

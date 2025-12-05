@@ -6,18 +6,18 @@ export class VerCoordenadasController {
     private router: Router;
     private path: string = "/api/event/coordinates";
 
-    // Use Cases (inyectados desde el contenedor)   
     private getCoordenadasUseCase = DependencyContainer.getGetCoordenadasUseCase();
+    private verifyOrganizerOrAttendeeInEvent = DependencyContainer.getVerifyOrganizerOrAttendeeInEvent();
 
     constructor() {
         this.router = express.Router();
-        this.router.use(authMiddleware)
+        this.router.use(authMiddleware);
         this.initializeRoutes();
     }
 
     private initializeRoutes(): void {
-        // Endpoint para obtener coordenadas de un evento
-        this.router.get("/:evento_id", this.getCoordenadas.bind(this));
+        // Endpoint para obtener coordenadas de un evento (solo organizadores/asistentes)
+        this.router.get("/:evento_id", this.verifyOrganizerOrAttendeeInEvent, this.getCoordenadas.bind(this));
     }
 
     private async getCoordenadas(req: Request, res: Response): Promise<void> {

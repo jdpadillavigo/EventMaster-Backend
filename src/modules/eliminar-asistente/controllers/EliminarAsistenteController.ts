@@ -7,18 +7,16 @@ export class EliminarAsistenteController {
   private path: string = '/api';
 
   private eliminarAsistenteUseCase = DependencyContainer.getEliminarAsistenteUseCase();
+  private verifyOrganizerInEvent = DependencyContainer.getVerifyOrganizerInEvent();
 
   constructor() {
     this.router = express.Router();
-    // Proteger rutas
     this.router.use(authMiddleware);
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    // Eliminar un invitado (organizador/coorganizador)
-    // Ruta: POST /api/eventos/:evento_id/participantes/:usuario_id/eliminar
-    this.router.post('/eventos/:evento_id/participantes/:usuario_id/eliminar', this.eliminarInvitado.bind(this));
+    this.router.post('/eventos/:evento_id/participantes/:usuario_id/eliminar', this.verifyOrganizerInEvent, this.eliminarInvitado.bind(this));
   }
 
   private async eliminarInvitado(req: Request, res: Response): Promise<void> {

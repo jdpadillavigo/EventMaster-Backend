@@ -3,14 +3,16 @@ import { ITipoRecursoRepository } from '../../../domain/interfaces/ITipoRecursoR
 import { IEventoRepository } from '../../../domain/interfaces/IEventoRepository';
 import { CompartirRecursoDto, CompartirRecursoResultDto } from '../dtos/CompartirRecursoDto';
 import { TipoNotificacion } from '../../../domain/value-objects/TipoNotificacion';
-import { NotificacionFabrica } from '../../../infrastructure/patterns/factoryMethod/NotificacionFabrica';
+import { NotificationManager } from '../../../infrastructure/patterns/observer/NotificationManager';
+
 
 export class CompartirRecursoUseCase {
   constructor(
     private recursoRepository: IRecursoRepository,
     private tipoRecursoRepository: ITipoRecursoRepository,
-    private eventoRepository: IEventoRepository
-  ) {}
+    private eventoRepository: IEventoRepository,
+    private notificationManager: NotificationManager
+  ) { }
 
   async execute(dto: CompartirRecursoDto, usuarioId: number): Promise<CompartirRecursoResultDto> {
     // Validar datos requeridos
@@ -37,7 +39,7 @@ export class CompartirRecursoUseCase {
 
       // Verificar si ya existe un recurso con el mismo nombre y URL en el evento
       const recursosEvento = await this.recursoRepository.findByEventoId(dto.evento_id);
-      const recursoExistente = recursosEvento.find((r: any) => 
+      const recursoExistente = recursosEvento.find((r: any) =>
         r.nombre === dto.nombre && r.url === dto.url
       );
 
@@ -56,12 +58,10 @@ export class CompartirRecursoUseCase {
         evento_id: dto.evento_id
       });
 
-      // Crear notificación para los participantes del evento
-      await NotificacionFabrica.crearNotificacion(
-        new Date(),
-        dto.evento_id,
-        TipoNotificacion.ACCION,
-        `Se agregó un nuevo recurso: ${dto.nombre}`
+      // Notificar a los usuarios
+      await this.notificationManager.notify(
+        TipoNotificacion.RECURSO_AGREGADO,  // ACA PONES EL TIPO, DEBES FIJARTE EN TipoNotificacion.ts
+        { eventoId: dto.evento_id, emisorId: usuarioId }
       );
 
       return {
@@ -83,11 +83,11 @@ export class CompartirRecursoUseCase {
 
     } catch (error: any) {
       console.error('Error compartiendo recurso:', error);
-      
+
       if (error.message.includes('no encontrado')) {
         throw error;
       }
-      
+
       throw new Error('Error interno del servidor');
     }
   }
