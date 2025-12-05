@@ -134,6 +134,7 @@ app.use(visualizarRecursoController.getPath(), visualizarRecursoController.getRo
 
 const eliminarRecursoController = new EliminarRecursoController();
 app.use(eliminarRecursoController.getPath(), eliminarRecursoController.getRouter());
+
 const desvincularEventoController = new DesvincularEventoController();
 app.use(desvincularEventoController.getPath(), desvincularEventoController.getRouter());
 
