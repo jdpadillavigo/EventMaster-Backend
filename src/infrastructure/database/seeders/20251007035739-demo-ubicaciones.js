@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     // Obtener los IDs de eventos generados automáticamente
     const eventos = await queryInterface.sequelize.query(
       `SELECT evento_id FROM "Evento" ORDER BY evento_id ASC;`,
@@ -13,27 +13,27 @@ module.exports = {
 
     await queryInterface.bulkInsert('Ubicacion', [
       {
-        direccion: 'Centro de Convenciones Ciudad, Av. Principal 123',
-        latitud: -12.0464,
-        longitud: -77.0428,
+        direccion: 'Swissôtel Lima, Av. Santo Toribio 173, San Isidro',
+        latitud: -12.0976,
+        longitud: -77.0383,
         evento_id: eventoIds[0]
       },
       {
-        direccion: 'Universidad Tecnológica, Campus Norte',
-        latitud: -12.0564,
-        longitud: -77.0528,
+        direccion: 'PUCP - Pontificia Universidad Católica del Perú, Av. Universitaria 1801, San Miguel',
+        latitud: -12.0696,
+        longitud: -77.0796,
         evento_id: eventoIds[1]
       },
       {
-        direccion: 'Café Tech Hub, Plaza San Martín',
-        latitud: -12.0664,
-        longitud: -77.0628,
+        direccion: 'Plaza San Martín, Centro Histórico de Lima',
+        latitud: -12.0517,
+        longitud: -77.0346,
         evento_id: eventoIds[2]
       },
       {
-        direccion: 'Parque Tecnológico, Zona Industrial',
-        latitud: -12.0764,
-        longitud: -77.0728,
+        direccion: 'Parque Kennedy, Miraflores',
+        latitud: -12.1218,
+        longitud: -77.0304,
         evento_id: eventoIds[3]
       },
       {
@@ -51,7 +51,7 @@ module.exports = {
     ], {});
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Ubicacion', null, {});
   }
 };

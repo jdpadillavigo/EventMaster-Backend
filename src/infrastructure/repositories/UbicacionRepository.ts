@@ -3,7 +3,7 @@ import { IUbicacionRepository } from '../../domain/interfaces/IUbicacionReposito
 const db = require('../database/models');
 
 export class UbicacionRepository implements IUbicacionRepository {
-  
+
   async create(data: any): Promise<any> {
     try {
       const nuevaUbicacion = await db.Ubicacion.create(data);
@@ -17,7 +17,8 @@ export class UbicacionRepository implements IUbicacionRepository {
   async findByEventoId(eventoId: number): Promise<any | null> {
     try {
       const ubicacion = await db.Ubicacion.findOne({
-        where: { evento_id: eventoId }
+        where: { evento_id: eventoId },
+        attributes: ['latitud', 'longitud']
       });
       return ubicacion;
     } catch (error) {
@@ -30,7 +31,7 @@ export class UbicacionRepository implements IUbicacionRepository {
     try {
       const ubicacion = await db.Ubicacion.findByPk(id);
       if (!ubicacion) return null;
-      
+
       await ubicacion.update(data);
       return ubicacion;
     } catch (error) {

@@ -23,6 +23,8 @@ import { ProfileController } from "./modules/perfil/controllers/ProfileControlle
 import { CompartirRecursoController } from "./modules/compartir-recursos/controllers/CompartirRecursoController";
 import { VisualizarRecursoController } from "./modules/visualizar-recursos/controllers/VisualizarRecursoController";
 import { EliminarRecursoController } from "./modules/eliminar-recursos/controllers/EliminarRecursoController";
+import { EliminarAsistenteController } from "./modules/eliminar-asistente/controllers/EliminarAsistenteController";
+import { VerCoordenadasController } from "./modules/evento-coordenada/controllers/VerCoordenadasController";
 const db = require("./infrastructure/database/models");
 
 dotenv.config();
@@ -131,6 +133,12 @@ const eliminarRecursoController = new EliminarRecursoController();
 app.use(eliminarRecursoController.getPath(), eliminarRecursoController.getRouter());
 const desvincularEventoController = new DesvincularEventoController();
 app.use(desvincularEventoController.getPath(), desvincularEventoController.getRouter());
+
+const eliminarAsistenteController = new EliminarAsistenteController();
+app.use(eliminarAsistenteController.getPath(), eliminarAsistenteController.getRouter());
+
+const verCoordenadasController = new VerCoordenadasController();
+app.use(verCoordenadasController.getPath(), verCoordenadasController.getRouter());
 
 // Conectar a la base de datos y sincronizar
 const startServer = async () => {

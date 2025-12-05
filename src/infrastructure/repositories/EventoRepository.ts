@@ -11,7 +11,7 @@ export class EventoRepository implements IEventoRepository {
           {
             model: db.Ubicacion,
             as: 'ubicacion',
-            attributes: ['direccion', 'latitud', 'longitud'],
+            attributes: ['direccion'],
             required: false,
           }
         ]

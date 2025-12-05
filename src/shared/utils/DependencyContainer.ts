@@ -37,6 +37,8 @@ import { ListManagedEventsUseCase } from '../../modules/eventos-gestionados/use-
 import { ListAttendedEventsUseCase } from '../../modules/eventos-asistidos/use-cases/ListAttendedEventsUseCase';
 import { DeleteEventoUseCase } from '../../modules/eventos-eliminar/use-cases/DeleteEventoUseCase';
 import { UnjoinEventUseCase } from '../../modules/desvincular-evento/use-cases/UnjoinEventUseCase';
+import { EliminarAsistenteUseCase } from '../../modules/eliminar-asistente/use-cases/EliminarAsistenteUseCase';
+import { GetCoordenadasUseCase } from '../../modules/evento-coordenada/use-cases/GetCoordenadasUseCase';
 
 // Use Cases - Recursos
 import { CompartirRecursoUseCase } from '../../modules/compartir-recursos/use-cases/CompartirRecursoUseCase';
@@ -140,6 +142,12 @@ export class DependencyContainer {
 
   // Use Case - Desvincular Evento
   private static unjoinEventUseCase: UnjoinEventUseCase;
+
+  // Use Case - Eliminar Asistente
+  private static eliminarAsistenteUseCase: EliminarAsistenteUseCase;
+
+  // Use Case - Get Coordenadas
+  private static getCoordenadasUseCase: GetCoordenadasUseCase;
 
   // Observadores (Singleton)
   private static notificationManager: NotificationManager;
@@ -462,6 +470,26 @@ export class DependencyContainer {
       );
     }
     return this.unjoinEventUseCase;
+  }
+
+  static getEliminarAsistenteUseCase(): EliminarAsistenteUseCase {
+    if (!this.eliminarAsistenteUseCase) {
+      this.eliminarAsistenteUseCase = new EliminarAsistenteUseCase(
+        this.getEventoRepository(),
+        this.getEventoParticipanteRepository(),
+        this.getNotificacionUsuarioRepository()
+      );
+    }
+    return this.eliminarAsistenteUseCase;
+  }
+
+  static getGetCoordenadasUseCase(): GetCoordenadasUseCase {
+    if (!this.getCoordenadasUseCase) {
+      this.getCoordenadasUseCase = new GetCoordenadasUseCase(
+        this.getUbicacionRepository()
+      );
+    }
+    return this.getCoordenadasUseCase;
   }
 
   // Getter para el middleware de verificación de organizador/coorganizador global
